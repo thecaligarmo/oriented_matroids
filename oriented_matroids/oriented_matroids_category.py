@@ -47,7 +47,7 @@ class OrientedMatroids(Category):
 
     .. SEEALSO::
 
-        :class:`OrientedMatroid`
+        :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
 
     TESTS::
 
@@ -77,7 +77,6 @@ class OrientedMatroids(Category):
             """
             pass
 
-        @abstract_method
         def groundset(self):
             """
             Return the ground set of ``self``.
@@ -90,9 +89,8 @@ class OrientedMatroids(Category):
                 [Hyperplane t0 - t1 + 0]
 
             """
-            pass
+            return self._groundset
 
-        @abstract_method
         def elements(self):
             """
             Return all elements.
@@ -105,7 +103,7 @@ class OrientedMatroids(Category):
                 [(0), (1), (-1)]
 
             """
-            pass
+            return self._elements
 
         @cached_method
         def matroid(self):

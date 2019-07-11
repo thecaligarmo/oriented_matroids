@@ -6,7 +6,7 @@ This implements an oriented matroid using the vector axioms.
 
 AUTHORS:
 
-- Aram Dermenjian (...): Initial version
+- Aram Dermenjian (2019-07-12): Initial version
 """
 
 ##############################################################################
@@ -30,18 +30,19 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     An oriented matroid implemented using vector axioms.
 
     This implements an oriented matroid using the vectors axioms. For this
-    let `\mathcal{C}` be a set of signed subsets and `E` a ground set. Then
-    a pair `M = (E,\mathcal{C})` is an oriented matroid using the vector
-    axioms if (see Theorem 3.7.5 in [BLSWZ1999]_):
+    let `\mathcal{V}` be a set of signed subsets and `E` a ground set. Then
+    a pair `M = (E,\mathcal{V})` is an oriented matroid using the vector
+    axioms if (see Theorem 3.7.5 and Corollary 3.7.9 in [BLSWZ1999]_):
 
-        - `\emptyset \in \mathcal{C}`
-        - `\mathcal{C} = -\mathcal{C}`
-        - For all `X,Y \in \mathcal{C}`, `X \circ Y \in \mathcal{C}`
-        - For all `X,Y \in \mathcal{C}` and `e \in X^+ \cap Y^-` there exists
-          a `Z \in \mathcal{C}` such that
+        - `\emptyset \in \mathcal{V}`
+        - `\mathcal{V} = -\mathcal{V}`
+        - For all `X,Y \in \mathcal{V}`, `X \circ Y \in \mathcal{V}`
+        - For all `X,Y \in \mathcal{V}` and `e \in X^+ \cap Y^-` there exists
+          a `Z \in \mathcal{V}` such that
           `Z^+ \subseteq (X^+ \cup Y^+) \backslash \left\{e\right\}` and
           `Z^- \subseteq (X^- \cup Y^-) \backslash \left\{e\right\}` and
           `(X \backslash Y) \cup (Y \backslash X) \cup (X^+ \cap Y^+) \cup (X^- \cap Y^-) \subseteq Z`.
+
 
     INPUT:
 
@@ -65,8 +66,8 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
     .. SEEALSO::
 
-        - :class:`OrientedMatroid`
-        - :class:`OrientedMatroids`
+        - :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
+        - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedVectorElement
 
@@ -97,13 +98,35 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
-        self._vectors = vectors
+        self._elements = vectors
         self._groundset = list(groundset)
 
 
     def is_valid(self):
         """
         Returns whether our circuits satisfy the circuit axioms.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: V2 = [[1,1]]
+            sage: OrientedMatroid(V2, key='vector')
+            Traceback (most recent call last):
+            ...
+            ValueError: Every element needs an opposite
+            
+            sage: V3 = [[1,1],[-1,-1],[0,-1],[0,1],[-1,0],[1,0]]
+            sage: OrientedMatroid(V3, key='vector')
+            Traceback (most recent call last):
+            ...
+            ValueError: Composition must be in vectors
+            
+            sage: V4 = [[1,1],[-1,-1]]
+            sage: OrientedMatroid(V4, key='vector')
+            Traceback (most recent call last):
+            ...
+            ValueError: vector elimination failed
+
         """
         vectors = self.vectors()
         
@@ -149,24 +172,20 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     def _repr_(self):
         """
         Return a string representation of ``self``.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: V = [[1,1],[-1,-1],[0,0]]
+            sage: M = OrientedMatroid(V, key='vector'); M
+            Vector Oriented Matroid of rank 2
+
         """
         rep = "Vector Oriented Matroid of rank {}".format(self.rank())
         return rep
-
-    def groundset(self):
-        """
-        Return the groundset.
-        """
-        return self._groundset
-
-    def elements(self):
-        """
-        Return a list of elements.
-        """
-        return self.vectors()
 
     def vectors(self):
         """
         Shorthand for :meth:`~sage.matroids.oriented_matroids.OrientedMatroids.elements`
         """
-        return self._vectors
+        return self.elements()

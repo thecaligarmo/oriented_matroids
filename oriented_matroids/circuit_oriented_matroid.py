@@ -6,7 +6,7 @@ This implements an oriented matroid using the circuit axioms.
 
 AUTHORS:
 
-- Aram Dermenjian (...): Initial version
+- Aram Dermenjian (2019-07-12): Initial version
 """
 
 ##############################################################################
@@ -35,8 +35,12 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
 
         - `\emptyset \notin \mathcal{C}`
         - `\mathcal{C} = -\mathcal{C}`
-        - For all `X,Y \in \mathcal{C}`, if the support of `X` is contained in the support of `Y` then `X = Y` or `X = -Y`
-        - For all `X,Y \in \mathcal{C}`, `X \neq -Y`, and `e \in X^+ \cap Y^-` there exists a `Z \in \mathcal{C}` such that `Z^+ \subseteq (X^+ \cup Y^+) \backslash \left\{e\right\}` and `Z^- \subseteq (X^- \cup Y^-) \backslash \left\{e\right\}`.
+        - For all `X,Y \in \mathcal{C}`, if the support of `X` is contained
+          in the support of `Y` then `X = Y` or `X = -Y`
+        - For all `X,Y \in \mathcal{C}`, `X \neq -Y`, and
+          `e \in X^+ \cap Y^-` there exists a `Z \in \mathcal{C}` such that
+          `Z^+ \subseteq (X^+ \cup Y^+) \backslash \left\{e\right\}` and
+          `Z^- \subseteq (X^- \cup Y^-) \backslash \left\{e\right\}`.
 
     INPUT:
 
@@ -46,6 +50,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
       data. If not provided, we grab the data from the signed subsets.
 
     EXAMPLES::
+
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1]],key='circuit'); M
         Circuit Oriented Matroid of rank 1
@@ -60,8 +65,8 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
 
     .. SEEALSO::
 
-        :class:`OrientedMatroid`
-        :class:`OrientedMatroids`
+        :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
+        :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedSubsetElement
 
@@ -92,13 +97,39 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
-        self._circuits = circuits
+        self._elements = circuits
         self._groundset = list(groundset)
 
 
     def is_valid(self):
         """
         Return whether our circuits satisfy the circuit axioms.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
+            sage: M = OrientedMatroid(C,key='circuit')
+            sage: M.is_valid()
+            True
+            sage: C2 = [ ((1,4),(2,3)) , ((1,3),(2,4)) , ((2,3),(1,4)) ]
+            sage: OrientedMatroid(C2,key='circuit')
+            Traceback (most recent call last):
+            ...
+            ValueError: Only same/opposites can have same support
+            
+            sage: C3 = [ ((),()) , ((1,4),(2,3)) , ((2,3),(1,4)) ]
+            sage: OrientedMatroid(C3,key='circuit',groundset=[1,2,3,4])
+            Traceback (most recent call last):
+            ...
+            ValueError: Empty set not allowed
+            
+            sage: C4= [ ((1,),()) , ((1,4),(2,3)) , ((2,3),(1,4)) ]
+            sage: OrientedMatroid(C4,key='circuit',groundset=[1,2,3,4])
+            Traceback (most recent call last):
+            ...
+            ValueError: Every element needs an opposite
+
         """
         circuits = self.circuits()
         
@@ -137,24 +168,20 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
     def _repr_(self):
         """
         Return a string representation of ``self``.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: C = [ ((1,),(2,)) , ((2,),(1,)) , ((3,),(4,)) , ((4,),(3,))]
+            sage: OrientedMatroid(C,key='circuit',groundset=[1,2,3,4])
+            Circuit Oriented Matroid of rank 2
+
         """
         rep = "Circuit Oriented Matroid of rank {}".format(self.rank())
         return rep
     
-    def groundset(self):
-        """
-        Return a list of groundset.
-        """
-        return self._groundset
-
-    def elements(self):
-        """
-        Return set of elements.
-        """
-        return self.circuits()
-
     def circuits(self):
         """
-        Shorthand for :meth:`~sage.categories.oriented_matroids.OrientedMatroids.elements`.
+        Shorthand for :meth:`~oriented_matroids.oriented_matroids_category.OrientedMatroids.elements`.
         """
-        return self._circuits
+        return self.elements()

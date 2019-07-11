@@ -7,7 +7,7 @@ matroids.
 
 AUTHORS:
 
-- Aram Dermenjian (...): Initial version
+- Aram Dermenjian (2019-07-12): Initial version
 """
 
 ##############################################################################
@@ -68,7 +68,7 @@ class SignedSubsetElement(Element):
         +: e
         -: 
         0: 
-    
+
     Elements are also lazy loaded to return the sign of elements from the grou
 ndset::
 
@@ -82,8 +82,8 @@ ndset::
 
     .. SEEALSO::
 
-        - :class:`OrientedMatroid`
-        - :class:`OrientedMatroids`
+        - :class:`oriented_matroids.oriented_Matroid.OrientedMatroid`
+        - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     def __init__(self, parent, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
         """
@@ -171,18 +171,17 @@ ndset::
 
         # Setup the ground set if it's not set yet
         if groundset is None:
-            self._g = self._p.union(self._n).union(self._z)
+            self._g = list(self._p.union(self._n).union(self._z))
         else:
-            groundset = set(groundset)
             if not self.support().union(self.zeroes()).issubset(groundset):
                 raise ValueError("Elements must appear in groundset")
 
             # Update the zeroes with everything in the ground set
             if self._z is None:
-                self._z = groundset.difference(self.support())
+                self._z = set(groundset).difference(self.support())
             
             # ground set should be everything
-            if not groundset.issubset(self.support().union(self.zeroes())):
+            if not set(groundset).issubset(self.support().union(self.zeroes())):
                 raise ValueError("Every element must be either positive, negative or zero")
             self._g = groundset
 
@@ -265,6 +264,18 @@ ndset::
     def _repr_(self):
         """
         Return a string of the signed subset.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid 
+            sage: from oriented_matroids.signed_subset_element import SignedSubsetElement
+            sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
+            sage: M = OrientedMatroid(C,key='circuit')
+            sage: SignedSubsetElement(M,data = ((1,4),(2,3)))
+            +: 1,4
+            -: 2,3
+            0: 
+
         """
 
         p = map(str, self.positives())
@@ -275,6 +286,20 @@ ndset::
     def _latex_(self):
         """
         Return a latex representation of the signed subset.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid 
+            sage: from oriented_matroids.signed_subset_element import SignedSubsetElement
+            sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
+            sage: M = OrientedMatroid(C,key='circuit')
+            sage: SignedSubsetElement(M,data = ((1,4),(2,3)))
+            +: 1,4
+            -: 2,3
+            0: 
+            sage: latex(SignedSubsetElement(M,data = ((1,4),(2,3))))
+            \left( \left{1,4\right},\left{2,3\right} \right)
+
         """
         p = map(str, self.positives())
         n = map(str, self.negatives())
@@ -449,9 +474,9 @@ ndset::
 
         .. WARNING::
 
-            This is only implemented for covector type oriented matroids.
+            Requires the method `face_lattice` to exist in the oriented matroid.
         """
-        if not getattr(self.parent(),'face_lattice',False):
+        if getattr(self.parent(),'face_lattice',None) is not None:
             raise TypeError("Topes are only implemented if .face_lattice() is implemented")
 
         return self in self.parent().topes()

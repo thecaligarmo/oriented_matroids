@@ -20,7 +20,7 @@ To define your own oriented matroid,...
 
 AUTHORS:
 
-- Aram Dermenjian (...): initial version
+- Aram Dermenjian (2019-07-12): initial version
 
 
 
@@ -96,17 +96,16 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
         [(0,0,0),
          (0,1,1),
          (0,-1,-1),
-         (1,1,0),
+         (1,0,1),
          (1,1,1),
-         (1,0,-1),
-         (1,1,-1),
+         (1,-1,0),
+         (1,-1,1),
          (1,-1,-1),
-         (-1,-1,0),
-         (-1,0,1),
+         (-1,0,-1),
+         (-1,1,0),
          (-1,1,1),
-         (-1,-1,1),
+         (-1,1,-1),
          (-1,-1,-1)]
-
 
     OUTPUT:
 
@@ -119,7 +118,7 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
 
     .. SEEALSO::
 
-        :class:`OrientedMatroids`
+        :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
 
     REFERENCES:
 

@@ -8,7 +8,7 @@ this can either be seen as a signed vector or covector.
 
 AUTHORS:
 
-- Aram Dermenjian (...): Initial version
+- Aram Dermenjian (2019-07-12): Initial version
 """
 
 ##############################################################################
@@ -56,21 +56,24 @@ class SignedVectorElement(SignedSubsetElement):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: from oriented_matroids.signed_vector_element import SignedVectorElement
-        sage: M = OrientedMatroid([[1],[-1]],key='circuit')
-        sage: SignedVectorElement(M,data = (0,))
-        (0)
-        sage: SignedVectorElement(M,data = (1,))
-        (1)
-        sage: M = OrientedMatroid([[1],[-1]],key='circuit', groundset=['e'])
-        sage: SignedVectorElement(M,data = (1,))
-        (1)
+
+        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
+        ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+        sage: M = OrientedMatroid(C, key='covector')
+        sage: SignedVectorElement(M,data = (0,-1,1))
+        (0,-1,1)
+        sage: SignedVectorElement(M,data = (1,1,-1))
+        (1,1,-1)
+        sage: M = OrientedMatroid(C, key='covector',groundset=['e','f','g'])
+        sage: SignedVectorElement(M,data = (1,-1,0))
+        (1,-1,0)
 
 
     .. SEEALSO::
 
-        - :class:`OrientedMatroid`
-        - :class:`OrientedMatroids`
-        - :class:`SignedSubsetElement`
+        - :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
+        - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+        - :class:`oriented_matroids.signed_subset_element.SignedSubsetElement`
     """
     def __init__(self, parent, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
         """
@@ -83,6 +86,18 @@ class SignedVectorElement(SignedSubsetElement):
     def _repr_(self):
         """
         Return a representation depending on implementation.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.signed_vector_element import SignedVectorElement
+
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
+            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: M = OrientedMatroid(C, key='covector')
+            sage: SignedVectorElement(M,data = (1,1,-1))
+            (1,1,-1)
+
         """
 
         p = map(str, self.positives())
@@ -93,6 +108,18 @@ class SignedVectorElement(SignedSubsetElement):
     def _latex_(self):
         """
         Return a latex representation depending on implementation.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.signed_vector_element import SignedVectorElement
+
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
+            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: M = OrientedMatroid(C, key='covector')
+            sage: latex(SignedVectorElement(M,data = (1,1,-1)))
+            \left(1,1,-1\right)
+
         """
         p = map(str, self.positives())
         n = map(str, self.negatives())
