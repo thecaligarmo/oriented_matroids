@@ -21,9 +21,8 @@ AUTHORS:
 
 from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
-from sage.categories.oriented_matroids import OrientedMatroids
-
-from sage.matroids.oriented_matroids.signed_subset_element import SignedSubsetElement
+from oriented_matroids.oriented_matroids_category import OrientedMatroids
+from oriented_matroids.signed_subset_element import SignedSubsetElement
 
 class CircuitOrientedMatroid(UniqueRepresentation,Parent):
     r"""
@@ -47,7 +46,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
       data. If not provided, we grab the data from the signed subsets.
 
     EXAMPLES::
-        sage:
+        sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1]],key='circuit'); M
         Circuit Oriented Matroid of rank 1
         sage: M.groundset()

@@ -52,7 +52,8 @@ class SignedSubsetElement(Element):
     
     Some examples of element constructions::
 
-        sage: from sage.matroids.oriented_matroids.signed_subset_element import SignedSubsetElement
+        sage: from oriented_matroids.oriented_matroid import OrientedMatroid 
+        sage: from oriented_matroids.signed_subset_element import SignedSubsetElement
         sage: M = OrientedMatroid([[1],[-1]],key='circuit');
         sage: SignedSubsetElement(M,data = (0,))
         +: 
@@ -286,7 +287,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[1,-1,1],[-1,1,-1]], implementation='circuit')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[1,-1,1],[-1,1,-1]], key='circuit')
             sage: E = M.elements()[0]
             sage: E.positives()
             {0, 2}
@@ -300,7 +302,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[1,-1,1],[-1,1,-1]], implementation='circuit')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[1,-1,1],[-1,1,-1]], key='circuit')
             sage: E = M.elements()[0]
             sage: E.negatives()
             {1}
@@ -314,7 +317,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], implementation='circuit')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], key='circuit')
             sage: E = M.elements()[0]
             sage: E.zeroes()
             {2}
@@ -328,7 +332,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], implementation='circuit')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], key='circuit')
             sage: E = M.elements()[0]
             sage: E.support()
             {0, 1}
@@ -342,7 +347,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], implementation='circuit')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[1,-1,0],[-1,1,0]], key='circuit')
             sage: E = M.elements()[0]
             sage: E.groundset()
             [0, 1, 2]
@@ -361,7 +367,8 @@ ndset::
 
         EXAMPLES::
 
-            sage: M = OrientedMatroid([[0],[1],[-1]], implementation='vector')
+            sage: from oriented_matroids import OrientedMatroid 
+            sage: M = OrientedMatroid([[0],[1],[-1]], key='vector')
             sage: E1 = M.elements()[0]; E2 = M.elements()[1]
             sage: E1.composition(E2)
             (1)

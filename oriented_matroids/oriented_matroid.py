@@ -38,7 +38,7 @@ AUTHORS:
 
 from sage.geometry.hyperplane_arrangement.arrangement import HyperplaneArrangementElement
 from sage.graphs.digraph import DiGraph
-from sage.matrix.matrix import Matrix
+from sage.structure.element import Matrix
 import copy
 
 def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
@@ -71,10 +71,11 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
 
     EXAMPLES::
         
+        sage: from oriented_matroids import OrientedMatroid
         sage: OrientedMatroid([[0]],key='covector')
         Covector Oriented Matroid of rank 0
         sage: OrientedMatroid([[0]],key='circuit')
-        Traceback (most recent call last)
+        Traceback (most recent call last):
         ...
         ValueError: Empty set not allowed
 
@@ -189,13 +190,13 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
         groundset = deep_tupler(groundset)
 
     if key == "covector":
-        from sage.matroids.oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
+        from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
         OM = CovectorOrientedMatroid(data, groundset=groundset)
     elif key == "circuit":
-        from sage.matroids.oriented_matroids.circuit_oriented_matroid import CircuitOrientedMatroid
+        from oriented_matroids.circuit_oriented_matroid import CircuitOrientedMatroid
         OM = CircuitOrientedMatroid(data, groundset=groundset)
     elif key == "vector":
-        from sage.matroids.oriented_matroids.vector_oriented_matroid import VectorOrientedMatroid
+        from oriented_matroids.vector_oriented_matroid import VectorOrientedMatroid
         OM = VectorOrientedMatroid(data, groundset=groundset)
 
     if OM is None:

@@ -39,6 +39,7 @@ class OrientedMatroids(Category):
 
     EXAMPLES::
 
+        sage: from oriented_matroids import OrientedMatroids
         sage: M = OrientedMatroids(); M
         Category of oriented matroids
         sage: M.super_categories()
@@ -57,6 +58,7 @@ class OrientedMatroids(Category):
         """
         EXAMPLES::
 
+            sage: from oriented_matroids import OrientedMatroids
             sage: OrientedMatroids().super_categories()
             [Category of sets]
         """
@@ -82,8 +84,9 @@ class OrientedMatroids(Category):
 
             EXAMPLES::
                 
+                sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(2)
-                sage: M = OrientedMatroid(A, implementation='covector'); M.groundset()
+                sage: M = OrientedMatroid(A, key='covector'); M.groundset()
                 [Hyperplane t0 - t1 + 0]
 
             """
@@ -96,8 +99,9 @@ class OrientedMatroids(Category):
 
             EXAMPLES::
 
+                sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(2)
-                sage: M = OrientedMatroid(A, implementation='covector'); M.elements()
+                sage: M = OrientedMatroid(A, key='covector'); M.elements()
                 [(0), (1), (-1)]
 
             """
@@ -115,8 +119,9 @@ class OrientedMatroids(Category):
 
             EXAMPLES::
 
+                sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(3)
-                sage: M = OrientedMatroid(A, implementation='covector'); M.matroid()
+                sage: M = OrientedMatroid(A, key='covector'); M.matroid()
                 Matroid of rank 3 on 3 elements with 1 bases
 
             """
@@ -134,11 +139,12 @@ class OrientedMatroids(Category):
 
             EXAMPLES::
 
+                sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(3)
-                sage: M = OrientedMatroid(A, implementation='covector'); M.rank()
+                sage: M = OrientedMatroid(A, key='covector'); M.rank()
                 3
                 sage: A = hyperplane_arrangements.braid(4)
-                sage: M = OrientedMatroid(A, implementation='covector'); M.rank()
+                sage: M = OrientedMatroid(A, key='covector'); M.rank()
                 6
             """
             return self.matroid().rank()

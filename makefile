@@ -4,7 +4,7 @@
 PACKAGE = oriented_matroids
 
 # change to your sage command if needed
-SAGE = /sage/sage
+SAGE = /sage/sage/sage
 
 all: install test
 

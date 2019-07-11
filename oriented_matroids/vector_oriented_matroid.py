@@ -21,9 +21,8 @@ AUTHORS:
 
 from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
-from sage.categories.oriented_matroids import OrientedMatroids
-
-from sage.matroids.oriented_matroids.signed_vector_element import SignedVectorElement
+from oriented_matroids import OrientedMatroids
+from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
 class VectorOrientedMatroid(UniqueRepresentation, Parent):
@@ -53,6 +52,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
     EXAMPLES::
 
+        sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
         Vector Oriented Matroid of rank 1
         sage: M.groundset()

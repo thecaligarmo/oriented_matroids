@@ -20,7 +20,7 @@ AUTHORS:
 #
 #                  http://www.gnu.org/licenses/
 ##############################################################################
-from sage.matroids.oriented_matroids.signed_subset_element import SignedSubsetElement
+from oriented_matroids.signed_subset_element import SignedSubsetElement
 
 
 import copy
@@ -54,7 +54,8 @@ class SignedVectorElement(SignedSubsetElement):
     
     Some examples of element constructions::
 
-        sage: from sage.matroids.oriented_matroids.signed_vector_element import SignedVectorElement
+        sage: from oriented_matroids import OrientedMatroid
+        sage: from oriented_matroids.signed_vector_element import SignedVectorElement
         sage: M = OrientedMatroid([[1],[-1]],key='circuit')
         sage: SignedVectorElement(M,data = (0,))
         (0)
