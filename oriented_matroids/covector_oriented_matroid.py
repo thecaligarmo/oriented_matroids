@@ -56,17 +56,17 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
         Covector Oriented Matroid of rank 1
         sage: M.groundset()
-        ['e']
+        ('e',)
 
         sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
         ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector'); M
         Covector Oriented Matroid of rank 3
         sage: M.groundset()
-        [0, 1, 2]
+        (0, 1, 2)
         sage: M = OrientedMatroid(C, key='covector',groundset=['h1','h2','h3']);
         sage: M.groundset()
-        ['h1', 'h2', 'h3']
+        ('h1', 'h2', 'h3')
 
 
     .. SEEALSO::
@@ -103,7 +103,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
                     raise ValueError("Groundsets must be the same")
 
         self._elements = covectors
-        self._groundset = list(groundset)
+        self._groundset = tuple(groundset)
 
 
     def _repr_(self):

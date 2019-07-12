@@ -86,7 +86,7 @@ class OrientedMatroids(Category):
                 sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(2)
                 sage: M = OrientedMatroid(A, key='covector'); M.groundset()
-                [Hyperplane t0 - t1 + 0]
+                (Hyperplane t0 - t1 + 0,)
 
             """
             return self._groundset
@@ -225,23 +225,41 @@ class OrientedMatroids(Category):
     
             A *deletion* of an oriented matroid `M = (E, \mathcal{C})` is
             the oriented matroid `M\backslash A = (E \backslash A, \mathcal{C} \backslash A)` where
+            
             .. MATH::
     
                 \mathcal{C} \backslash A = \left\{ X\mid_{E \backslash A} : X \in \mathcal{C}\right\}
+
+            EXAMPLES::
+
+                sage: from oriented_matroids import OrientedMatroid
+                sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
+                sage: M = OrientedMatroid(C,key='circuit'); M
+                Circuit Oriented Matroid of rank 4
+                sage: D = M.deletion(1)
+                sage: D.elements()
+                [+: 4
+                 -: 2,3
+                 0: , +: 2,3
+                 -: 4
+                 0: ]
+
             """
             if change_set in self.groundset():
                 change_set = set([change_set])
             else:
                 change_set = set(change_set)
     
-            groundset = set(self.groundset).difference(change_set)
+            from oriented_matroids.oriented_matroid import deep_tupler
+            groundset = deep_tupler(set(self.groundset()).difference(change_set))
             data = []
-            for c in M.elements():
-                p = (c.positives().difference(change_set))
-                n = (c.negatives().difference(change_set))
-                z = (c.zeroes().difference(change_set))
+            for c in self.elements():
+                p = tuple(c.positives().difference(change_set))
+                n = tuple(c.negatives().difference(change_set))
+                z = tuple(c.zeroes().difference(change_set))
                 data.append( (p,n,z) )
-            return CovectorOrientedMatroid(data, groundset=groundset)
+            data = deep_tupler(data)
+            return type(self)(data, groundset=groundset)
     
         def restriction(self, change_set):
             r"""
@@ -249,24 +267,39 @@ class OrientedMatroids(Category):
     
             A *restriction* of an oriented matroid `M = (E, \mathcal{C})` is
             the oriented matroid `M / A = (E \backslash A, \mathcal{C} / A)` where
+
             .. MATH::
-    
+
                 \mathcal{C} / A = \left\{ X\mid_{E \backslash A} : X \in \mathcal{C} \text{ and} A \subseteq X^0 \right\}
+
+            EXAMPLES::
+
+
             """
+                #sage: from oriented_matroids import OrientedMatroid
+                #sage: A = hyperplane_arrangements.braid(3)
+                #sage: M = OrientedMatroid(A, key='covector'); M
+                #Covector Oriented Matroid of rank 3
+                #sage: R = M.restriction(M.groundset()[1]); R
+                #Covector Oriented Matroid of rank 2
+                #sage: R.elements()
+                #[(0,0), (1,1), (-1,-1)]
             if change_set in self.groundset():
                 change_set = set([change_set])
             else:
                 change_set = set(change_set)
     
-            groundset = set(self.groundset).difference(change_set)
+            from oriented_matroids.oriented_matroid import deep_tupler
+            groundset = deep_tupler(set(self.groundset()).difference(change_set))
             data = []
-            for c in M.elements():
-                p = (c.positives().difference(change_set))
-                n = (c.negatives().difference(change_set))
-                z = (c.zeroes().difference(change_set))
-                if change_set.issubset(z):
+            for c in self.elements():
+                p = tuple(c.positives().difference(change_set))
+                n = tuple(c.negatives().difference(change_set))
+                z = tuple(c.zeroes().difference(change_set))
+                if change_set.issubset(c.zeroes()):
                     data.append( (p,n,z) )
-            return CovectorOrientedMatroid(data, groundset=groundset)
+            data = deep_tupler(data)
+            return type(self)(data, groundset=groundset)
     
         def loops(self):
             r"""

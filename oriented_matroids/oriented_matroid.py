@@ -86,13 +86,13 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
         14
 
         sage: A = hyperplane_arrangements.braid(3)
-        sage: M = OrientedMatroid(A, key='covector'); M
-        Covector Oriented Matroid of rank 3
+        sage: M = OrientedMatroid(A); M
+        Hyperplane arrangement Oriented Matroid of rank 2
         sage: M.groundset()
-        [Hyperplane 0*t0 + t1 - t2 + 0,
+        (Hyperplane 0*t0 + t1 - t2 + 0,
          Hyperplane t0 - t1 + 0*t2 + 0,
-         Hyperplane t0 + 0*t1 - t2 + 0]
-        sage: M.covectors()
+         Hyperplane t0 + 0*t1 - t2 + 0)
+        sage: M.elements()
         [(0,0,0),
          (0,1,1),
          (0,-1,-1),
@@ -126,22 +126,13 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
 
     """
 
-    if key not in ["covector","vector","circuit","chirotope"]:
-        raise ValueError("invalid type key")
 
     # Instantiate oriented matroid
     OM = None
 
-    # If we have a hyperplane arrangement
+    # If we have a hyperplane arrangement we need to force the key to be an arrangement
     if isinstance(data, HyperplaneArrangementElement):
-        if not key == 'covector':
-            raise ValueError('Hyperplane arrangements are currently only implemented using covector axioms')
-        if not data.is_central():
-            raise ValueError("Hyperplane arrangements must be central to be an oriented matroid.")
-        A = copy.copy(data)
-        groundset = A.hyperplanes()
-        data = [i[0] for i in A.closed_faces()]
-
+        key = "arrangement"
     elif isinstance(data, DiGraph):
         if not key == 'circuit':
             raise ValueError('Digraphs are currently only implemented using circuit axioms')
@@ -178,25 +169,39 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
         if not key == 'chirotope':
             raise ValueError('Matrices are currently only implemented using chirotope axioms')
 
+    
+
+    if key not in ["covector","vector","circuit","chirotope","arrangement"]:
+        raise ValueError("invalid type key")
 
 
 
 
-    # Do some cleaning since we can't have hashable things as we
-    #   are using UniqueRepresentation which cahces.
-    data = deep_tupler(data)
-    if groundset is not None:
-        groundset = deep_tupler(groundset)
-
+    # In the following cases, deep_tupler is used since we are using UniqueRepresentation
+    #   Which doesn't allow us to have non-hashable things.
     if key == "covector":
         from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
+        data = deep_tupler(data)
+        if groundset is not None:
+            groundset = deep_tupler(groundset)
         OM = CovectorOrientedMatroid(data, groundset=groundset)
     elif key == "circuit":
         from oriented_matroids.circuit_oriented_matroid import CircuitOrientedMatroid
+        data = deep_tupler(data)
+        if groundset is not None:
+            groundset = deep_tupler(groundset)
         OM = CircuitOrientedMatroid(data, groundset=groundset)
     elif key == "vector":
         from oriented_matroids.vector_oriented_matroid import VectorOrientedMatroid
+        data = deep_tupler(data)
+        if groundset is not None:
+            groundset = deep_tupler(groundset)
         OM = VectorOrientedMatroid(data, groundset=groundset)
+    elif key == "arrangement":
+        from oriented_matroids.hyperplane_arrangement_oriented_matroid import HyperplaneArrangementOrientedMatroid
+        A = copy.copy(data)
+        groundset = deep_tupler(A.hyperplanes())
+        OM = HyperplaneArrangementOrientedMatroid(A,groundset=groundset)
 
     if OM is None:
         raise NotImplementedError("Oriented matroid of type {} is not implemented".format(key))

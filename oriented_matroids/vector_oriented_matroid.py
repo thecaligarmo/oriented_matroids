@@ -57,11 +57,11 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
         Vector Oriented Matroid of rank 1
         sage: M.groundset()
-        [0]
+        (0,)
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e']); M
         Vector Oriented Matroid of rank 1
         sage: M.groundset()
-        ['e']
+        ('e',)
 
 
     .. SEEALSO::
@@ -99,7 +99,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
                     raise ValueError("Groundsets must be the same")
 
         self._elements = vectors
-        self._groundset = list(groundset)
+        self._groundset = tuple(groundset)
 
 
     def is_valid(self):

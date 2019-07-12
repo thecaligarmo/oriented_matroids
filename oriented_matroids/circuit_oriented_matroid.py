@@ -55,13 +55,13 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         sage: M = OrientedMatroid([[1],[-1]],key='circuit'); M
         Circuit Oriented Matroid of rank 1
         sage: M.groundset()
-        [0]
+        (0,)
         
         sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
         sage: M = OrientedMatroid(C,key='circuit'); M
         Circuit Oriented Matroid of rank 4
         sage: M.groundset()
-        [1, 2, 3, 4]
+        (1, 2, 3, 4)
 
     .. SEEALSO::
 
@@ -75,6 +75,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         """
         Normalize arguments and set class.
         """
+
         category = OrientedMatroids()
         return super(CircuitOrientedMatroid, cls).__classcall__(cls, data, groundset = groundset, category=category)
 
@@ -98,7 +99,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
                     raise ValueError("Groundsets must be the same")
 
         self._elements = circuits
-        self._groundset = list(groundset)
+        self._groundset = tuple(groundset)
 
 
     def is_valid(self):
