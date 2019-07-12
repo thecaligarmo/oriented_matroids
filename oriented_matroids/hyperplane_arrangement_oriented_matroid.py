@@ -24,9 +24,6 @@ from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
-
-import copy
-
 class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented from a hyperplane arrangement.

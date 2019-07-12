@@ -22,9 +22,6 @@ AUTHORS:
 ##############################################################################
 from oriented_matroids.signed_subset_element import SignedSubsetElement
 
-
-import copy
-
 class SignedVectorElement(SignedSubsetElement):
     r"""
     Creates an oriented matroid element.
@@ -99,10 +96,6 @@ class SignedVectorElement(SignedSubsetElement):
             (1,1,-1)
 
         """
-
-        p = map(str, self.positives())
-        n = map(str, self.negatives())
-        z = map(str, self.zeroes())
         return "(" + ','.join([str(self(e)) for e in self.groundset()]) + ")"
 
     def _latex_(self):
@@ -121,8 +114,5 @@ class SignedVectorElement(SignedSubsetElement):
             \left(1,1,-1\right)
 
         """
-        p = map(str, self.positives())
-        n = map(str, self.negatives())
-        z = map(str, self.zeroes())
         return "\\left(" + ','.join([str(self(e)) for e in self.groundset()]) + "\\right)"
 

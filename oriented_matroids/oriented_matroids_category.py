@@ -151,6 +151,7 @@ class OrientedMatroids(Category):
             """
             Returns an arbitrary element.
             """
+            from sage.misc.prandom import randint
             els = self.elements()
             i = randint(1,len(els))
             return els[i-1]
@@ -340,6 +341,7 @@ class OrientedMatroids(Category):
             An oriented matroid is *simple* if there are no loops
             and no parallel elements.
             """
+            from sage.combinat.subset import Subsets
             if len(self.loops()) > 0:
                 return False
             for i in Subsets(self.groundset(), 2):

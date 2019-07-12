@@ -309,7 +309,6 @@ ndset::
         """
         p = map(str, self.positives())
         n = map(str, self.negatives())
-        z = map(str, self.zeroes())
         return "\\left( \\left{" + ','.join(p) + "\\right},\\left{" + ','.join(n) + "\\right} \\right)"
 
     def positives(self):
