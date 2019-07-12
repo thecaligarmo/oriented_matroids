@@ -313,5 +313,15 @@ class OrientedMatroids(Category):
                 if self.are_parallel(i[0], i[1]):
                     return False
             return True
-    
+
+        def __contains__(self, x):
+            r"""
+            Determine if ``x`` may be viewed as belonging to ``self``.
+
+            TESTS::
+                
+                
+            """
+            els = self.elements()
+            return x in els
     
