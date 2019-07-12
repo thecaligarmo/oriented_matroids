@@ -54,14 +54,14 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
-        Covector Oriented Matroid of rank 1
+        Covector oriented matroid of rank 1
         sage: M.groundset()
         ('e',)
 
         sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
         ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector'); M
-        Covector Oriented Matroid of rank 3
+        Covector oriented matroid of rank 3
         sage: M.groundset()
         (0, 1, 2)
         sage: M = OrientedMatroid(C, key='covector',groundset=['h1','h2','h3']);
@@ -77,18 +77,18 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset = None):
+    def __classcall__(cls, data, groundset=None):
         """
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(CovectorOrientedMatroid, cls).__classcall__(cls, data, groundset = groundset, category=category)
+        return super(CovectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None,category=None):
+    def __init__(self,data, groundset=None, category=None):
         """
         Initialize ``self``
         """
-        Parent.__init__(self,category = category)
+        Parent.__init__(self, category=category)
 
         # Set up our covectors
         covectors = []
@@ -96,21 +96,27 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
             # Ensure we're using the right type.
             covectors.append(self.element_class(self,data=d, groundset=groundset))
         # If our groundset is none, make sure the groundsets are the same for all elements
-        if groundset is None:
+        if groundset is None and len(covectors) > 0:
             groundset = covectors[0].groundset()
             for X in covectors:
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
         self._elements = covectors
-        self._groundset = tuple(groundset)
+        if groundset is None:
+            self._groundset = groundset
+        else:
+            self._groundset = tuple(groundset)
 
 
     def _repr_(self):
         """
         Return a string representation of ``self``.
         """
-        rep = "Covector Oriented Matroid of rank {}".format(self.rank())
+        try:
+            rep = "Covector oriented matroid of rank {}".format(self.rank())
+        except:
+            rep = "Covector oriented matroid"
         return rep
 
     def is_valid(self):
@@ -121,7 +127,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
             sage: from oriented_matroids import OrientedMatroid
             sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
-            Covector Oriented Matroid of rank 1
+            Covector oriented matroid of rank 1
 
             sage: C2 = [ [0,0],[1,1]]
             sage: OrientedMatroid(C2, key='covector')

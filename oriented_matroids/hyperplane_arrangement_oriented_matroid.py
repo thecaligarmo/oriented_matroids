@@ -58,23 +58,33 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(HyperplaneArrangementOrientedMatroid, cls).__classcall__(cls, data, groundset = groundset, category=category)
+        return super(HyperplaneArrangementOrientedMatroid, cls).__classcall__(cls, data=data, groundset = groundset, category=category)
 
-    def __init__(self,data, groundset=None,category=None):
+    def __init__(self,data, groundset=None, category=None):
         """
         Initialize ``self``
         """
         Parent.__init__(self,category = category)
 
+        
         self._arrangement = data
-        self._groundset = tuple(data.hyperplanes())
+        if data and groundset is None:
+            groundset = tuple(data.hyperplanes())
+
+        if groundset is None:
+            self._groundset = groundset
+        else:
+            self._groundset = tuple(groundset)
 
 
     def _repr_(self):
         """
         Return a string representation of ``self``.
         """
-        rep = "Hyperplane arrangement Oriented Matroid of rank {}".format(self.arrangement().rank())
+        try:
+            rep = "Hyperplane arrangement oriented matroid of rank {}".format(self.arrangement().rank())
+        except:
+            rep = "Hyperplane arrangement oriented matroid"
         return rep
 
     def is_valid(self):

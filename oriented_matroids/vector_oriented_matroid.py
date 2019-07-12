@@ -55,11 +55,11 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
-        Vector Oriented Matroid of rank 1
+        Vector oriented matroid of rank 1
         sage: M.groundset()
         (0,)
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e']); M
-        Vector Oriented Matroid of rank 1
+        Vector oriented matroid of rank 1
         sage: M.groundset()
         ('e',)
 
@@ -72,14 +72,14 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset = None):
+    def __classcall__(cls, data, groundset=None):
         """
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(VectorOrientedMatroid, cls).__classcall__(cls, data, groundset = groundset, category=category)
+        return super(VectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None,category=None):
+    def __init__(self,data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
@@ -92,14 +92,17 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             vectors.append(self.element_class(self,data=d, groundset=groundset))
 
         # If our groundset is none, make sure the groundsets are the same for all elements
-        if groundset is None:
+        if groundset is None and len(vectors) > 0:
             groundset = vectors[0].groundset()
             for X in vectors:
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
         self._elements = vectors
-        self._groundset = tuple(groundset)
+        if groundset is None:
+            self._groundset = groundset
+        else:
+            self._groundset = tuple(groundset)
 
 
     def is_valid(self):
@@ -178,10 +181,13 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             sage: from oriented_matroids import OrientedMatroid
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector'); M
-            Vector Oriented Matroid of rank 2
+            Vector oriented matroid of rank 2
 
         """
-        rep = "Vector Oriented Matroid of rank {}".format(self.rank())
+        try:
+            rep = "Vector oriented matroid of rank {}".format(self.rank())
+        except:
+            rep = "Vector oriented matroid"
         return rep
 
     def vectors(self):

@@ -41,7 +41,7 @@ from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
 import copy
 
-def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
+def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
     r"""
     Construct an oriented matroid.
 
@@ -73,7 +73,7 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
         
         sage: from oriented_matroids import OrientedMatroid
         sage: OrientedMatroid([[0]],key='covector')
-        Covector Oriented Matroid of rank 0
+        Covector oriented matroid of rank 0
         sage: OrientedMatroid([[0]],key='circuit')
         Traceback (most recent call last):
         ...
@@ -81,13 +81,13 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
 
         sage: D = DiGraph({'v1':{'v2':1,'v3':2,'v4':3},'v2':{'v3':4,'v4':5},'v3':{'v4':6}})
         sage: M = OrientedMatroid(D,key="circuit"); M
-        Circuit Oriented Matroid of rank 4
+        Circuit oriented matroid of rank 4
         sage: len(M.circuits())
         14
 
         sage: A = hyperplane_arrangements.braid(3)
         sage: M = OrientedMatroid(A); M
-        Hyperplane arrangement Oriented Matroid of rank 2
+        Hyperplane arrangement oriented matroid of rank 2
         sage: M.groundset()
         (Hyperplane 0*t0 + t1 - t2 + 0,
          Hyperplane t0 - t1 + 0*t2 + 0,
@@ -200,12 +200,15 @@ def OrientedMatroid(data=None, groundset = None, key="covector", **kwds):
     elif key == "arrangement":
         from oriented_matroids.hyperplane_arrangement_oriented_matroid import HyperplaneArrangementOrientedMatroid
         A = copy.copy(data)
-        groundset = deep_tupler(A.hyperplanes())
+        if groundset is None:
+            groundset = deep_tupler(A.hyperplanes())
+        else:
+            groundset = deep_tupler(groundset)
         OM = HyperplaneArrangementOrientedMatroid(A,groundset=groundset)
 
     if OM is None:
         raise NotImplementedError("Oriented matroid of type {} is not implemented".format(key))
-
+    
     if OM.is_valid():
         return OM
 

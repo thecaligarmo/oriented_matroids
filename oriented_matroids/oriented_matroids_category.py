@@ -235,7 +235,7 @@ class OrientedMatroids(Category):
                 sage: from oriented_matroids import OrientedMatroid
                 sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
                 sage: M = OrientedMatroid(C,key='circuit'); M
-                Circuit Oriented Matroid of rank 4
+                Circuit oriented matroid of rank 4
                 sage: D = M.deletion(1)
                 sage: D.elements()
                 [+: 4
@@ -347,14 +347,16 @@ class OrientedMatroids(Category):
                     return False
             return True
 
-        def __contains__(self, x):
+        def _element_constructor_(self, x):
             r"""
             Determine if ``x`` may be viewed as belonging to ``self``.
 
-            TESTS::
-                
-                
+            
             """
-            els = self.elements()
-            return x in els
+            try:
+                if x in self.elements():
+                    return x
+                return False
+            except:
+                return False
     

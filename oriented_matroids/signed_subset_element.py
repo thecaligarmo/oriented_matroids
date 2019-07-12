@@ -85,7 +85,7 @@ ndset::
         - :class:`oriented_matroids.oriented_Matroid.OrientedMatroid`
         - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
-    def __init__(self, parent, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
+    def __init__(self, parent=None, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
         """
         Initialize ``self``.
         """
@@ -95,6 +95,12 @@ ndset::
                 groundset = parent.groundset()
             except AttributeError:
                 groundset = None
+
+        # remove parent if data not present
+        if parent is None or (data is None and groundset is None and positives is None):
+            from sage.structure.parent import Parent
+            data = parent
+            parent = Parent()
 
         # instantiate!
         self._p = set([])

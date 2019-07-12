@@ -53,13 +53,13 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1]],key='circuit'); M
-        Circuit Oriented Matroid of rank 1
+        Circuit oriented matroid of rank 1
         sage: M.groundset()
         (0,)
         
         sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
         sage: M = OrientedMatroid(C,key='circuit'); M
-        Circuit Oriented Matroid of rank 4
+        Circuit oriented matroid of rank 4
         sage: M.groundset()
         (1, 2, 3, 4)
 
@@ -71,35 +71,39 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
     Element = SignedSubsetElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset = None):
+    def __classcall__(cls, data, groundset=None):
         """
         Normalize arguments and set class.
         """
 
         category = OrientedMatroids()
-        return super(CircuitOrientedMatroid, cls).__classcall__(cls, data, groundset = groundset, category=category)
+        return super(CircuitOrientedMatroid, cls).__classcall__(cls, data=data, groundset = groundset, category=category)
 
-    def __init__(self,data, groundset=None,category=None):
+    def __init__(self,data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self,category = category)
+        Parent.__init__(self,category=category)
 
         # Set up our circuits
         circuits = []
-        for d in data:
-            # Convert to the appropriate element class
-            circuits.append(self.element_class(self,data=d, groundset=groundset))
+        if data:
+            for d in data:
+                # Convert to the appropriate element class
+                circuits.append(self.element_class(self,data=d, groundset=groundset))
 
         # If our groundset is none, make sure the groundsets are the same for all elements
-        if groundset is None:
+        if groundset is None and len(circuits) > 0:
             groundset = circuits[0].groundset()
             for X in circuits:
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
         self._elements = circuits
-        self._groundset = tuple(groundset)
+        if groundset is None:
+            self._groundset = None
+        else:
+            self._groundset = tuple(groundset)
 
 
     def is_valid(self):
@@ -175,10 +179,13 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
             sage: from oriented_matroids import OrientedMatroid
             sage: C = [ ((1,),(2,)) , ((2,),(1,)) , ((3,),(4,)) , ((4,),(3,))]
             sage: OrientedMatroid(C,key='circuit',groundset=[1,2,3,4])
-            Circuit Oriented Matroid of rank 2
+            Circuit oriented matroid of rank 2
 
         """
-        rep = "Circuit Oriented Matroid of rank {}".format(self.rank())
+        try:
+            rep = "Circuit oriented matroid of rank {}".format(self.rank())
+        except:
+            rep = "Circuit oriented matroid"
         return rep
     
     def circuits(self):
