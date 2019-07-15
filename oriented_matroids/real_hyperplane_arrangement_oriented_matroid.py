@@ -1,8 +1,8 @@
 r"""
-Oriented matroid from hyperplane arrangements
----------------------------------------------
+Oriented matroid from real hyperplane arrangements
+--------------------------------------------------
 
-This implements an oriented matroid from hyperplane arrangements
+This implements an oriented matroid from real hyperplane arrangements
 
 AUTHORS:
 
@@ -24,9 +24,9 @@ from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
-class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
+class RealHyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     r"""
-    An oriented matroid implemented from a hyperplane arrangement.
+    An oriented matroid implemented from a real hyperplane arrangement.
 
     This implements an oriented matroid using hyperplane arrangements.
     Oriented matroids arise from central hyperplane arrangements.
@@ -64,6 +64,7 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedVectorElement
+    key='real_hyperplane_arrangement'
 
     @staticmethod
     def __classcall__(cls, data, groundset = None):
@@ -71,7 +72,7 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(HyperplaneArrangementOrientedMatroid, cls).__classcall__(cls, data=data, groundset = groundset, category=category)
+        return super(RealHyperplaneArrangementOrientedMatroid, cls).__classcall__(cls, data=data, groundset = groundset, category=category)
 
     def __init__(self,data, groundset=None, category=None):
         """
@@ -136,6 +137,15 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         self._elements = [self.element_class(self,data=f,groundset=self.groundset()) for f in faces]
         return self._elements
 
+    def matroid(self):
+        """
+        Return the underlying matroid.
+        """
+        from sage.matroids.constructor import Matroid
+        from sage.matrix.constructor import matrix
+        m = matrix([H.normal() for H in self.arrangement().hyperplanes()])
+        return Matroid(matrix=m, groundset=self.groundset())
+
     def deletion(self, hyperplanes):
         """
         Return the hyperplane arrangement oriented matroid with hyperplanes removed
@@ -159,7 +169,7 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
                 A = A.deletion(h)
         else:
             A = A.deletion(h)
-        return HyperplaneArrangementOrientedMatroid(A)
+        return RealHyperplaneArrangementOrientedMatroid(A)
 
     def face_poset(self, facade=False):
         r"""

@@ -69,6 +69,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedSubsetElement
+    key='cocircuit'
 
     @staticmethod
     def __classcall__(cls, data, groundset=None):

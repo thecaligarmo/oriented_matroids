@@ -53,6 +53,12 @@ class OrientedMatroids(Category):
 
         sage: TestSuite(M).run()
     """
+    
+    """
+    List of all possible keys
+    """
+    keys = ['circuit','covector','vector','real_hyperplane_arrangement']
+
     @cached_method
     def super_categories(self):
         """
@@ -105,7 +111,7 @@ class OrientedMatroids(Category):
             """
             return self._elements
 
-        @cached_method
+        #@cached_method
         def matroid(self):
             r"""
             Returns the underlying matroid.
@@ -123,12 +129,13 @@ class OrientedMatroids(Category):
                 Matroid of rank 3 on 3 elements with 1 bases
 
             """
-            from sage.matroids.constructor import Matroid
-            data = list(set([frozenset(X.support()) for X in self.elements()]))
-            return Matroid(groundset = self.groundset(), data = data)
+            pass
+            #from sage.matroids.constructor import Matroid
+            #data = list(set([frozenset(X.support()) for X in self.elements()]))
+            #return Matroid(groundset = self.groundset(), data = data)
 
 
-        @cached_method
+        #@cached_method
         def rank(self):
             r"""
             Return the rank.
@@ -166,8 +173,19 @@ class OrientedMatroids(Category):
         def face_lattice(self, facade=False):
             r"""
             Returns the (big) face lattice.
+
+
+            The *(big) face lattice* is the (big) face poset with a top element added.
             """
-            pass
+            from sage.combinat.posets.lattices import LatticePoset
+            P = self.face_poset()
+            rels = P.relations()
+            els = [1]
+            for i in P:
+                els.append(i.element)
+                rels.append([i.element,1])
+            
+            return LatticePoset((els,rels), cover_relations=False, facade=facade)
 
 
         def topes(self):

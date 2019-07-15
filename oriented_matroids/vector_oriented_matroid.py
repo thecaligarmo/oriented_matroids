@@ -70,6 +70,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedVectorElement
+    key = 'vector'
 
     @staticmethod
     def __classcall__(cls, data, groundset=None):

@@ -39,6 +39,7 @@ AUTHORS:
 from sage.geometry.hyperplane_arrangement.arrangement import HyperplaneArrangementElement
 from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
+from oriented_matroids.oriented_matroids_category import OrientedMatroids
 import copy
 
 def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
@@ -132,7 +133,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
     # If we have a hyperplane arrangement we need to force the key to be an arrangement
     if isinstance(data, HyperplaneArrangementElement):
-        key = "arrangement"
+        key = "real_hyperplane_arrangement"
     elif isinstance(data, DiGraph):
         if not key == 'circuit':
             raise ValueError('Digraphs are currently only implemented using circuit axioms')
@@ -171,7 +172,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
     
 
-    if key not in ["covector","vector","circuit","chirotope","arrangement"]:
+    if key not in OrientedMatroids.keys:
         raise ValueError("invalid type key")
 
 
@@ -197,14 +198,14 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
         if groundset is not None:
             groundset = deep_tupler(groundset)
         OM = VectorOrientedMatroid(data, groundset=groundset)
-    elif key == "arrangement":
-        from oriented_matroids.hyperplane_arrangement_oriented_matroid import HyperplaneArrangementOrientedMatroid
+    elif key == "real_hyperplane_arrangement":
+        from oriented_matroids.real_hyperplane_arrangement_oriented_matroid import RealHyperplaneArrangementOrientedMatroid
         A = copy.copy(data)
         if groundset is None:
             groundset = deep_tupler(A.hyperplanes())
         else:
             groundset = deep_tupler(groundset)
-        OM = HyperplaneArrangementOrientedMatroid(A,groundset=groundset)
+        OM = RealHyperplaneArrangementOrientedMatroid(A,groundset=groundset)
 
     if OM is None:
         raise NotImplementedError("Oriented matroid of type {} is not implemented".format(key))

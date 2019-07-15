@@ -312,6 +312,24 @@ ndset::
         n = map(str, self.negatives())
         return "\\left( \\left{" + ','.join(p) + "\\right},\\left{" + ','.join(n) + "\\right} \\right)"
 
+    def __copy__(self):
+        """
+        Return a copy of the element
+        """
+        return SignedSubsetElement(parent=self.parent(), groundset=self.groundset(), positives=self.positives(), negatives=self.negatives(), zeroes=self.zeroes())
+
+    def __deepcopy__(self):
+        """
+        Return a copy of the element
+        """
+        return SignedSubsetElement(parent=self.parent(), groundset=self.groundset(), positives=self.positives(), negatives=self.negatives(), zeroes=self.zeroes())
+
+    def to_list(self):
+        """
+        Convert objcet to a list
+        """
+        return eval("[" + ','.join([str(self(e)) for e in self.groundset()]) + "]")
+
     def positives(self):
         """
         Return the set of positives.
@@ -509,4 +527,7 @@ ndset::
         if len(I) == 2**b:
             return True
         return False
+
+    def is_zero(self):
+        return len([1 for e in self.groundset() if self(e) != 0]) == 0
 

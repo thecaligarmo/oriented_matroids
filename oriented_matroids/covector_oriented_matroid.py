@@ -75,6 +75,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedVectorElement
+    key = 'covector'
 
     @staticmethod
     def __classcall__(cls, data, groundset=None):
@@ -191,6 +192,28 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         return self.elements()
 
+    def matroid(self):
+        r"""
+        Return the matroid of a covector oriented matroid
+        """
+
+        from sage.matroids.constructor import Matroid
+        from sage.matrix.constructor import matrix
+
+        els = self.elements()
+        mins = []
+        for X in els:
+            if not X.is_zero():
+                tmp = True
+                for Y in els:
+                    if Y != X and not Y.is_zero() and Y.composition(X) == X:
+                        tmp = False
+                        break
+                if tmp:
+                    mins.append(X)
+        
+        return Matroid(matrix=matrix([v.to_list() for v in mins]),groundset=self.groundset())
+
     def face_poset(self, facade=False):
         r"""
         Returns the (big) face poset.
@@ -211,33 +234,9 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
         """
         from sage.combinat.posets.posets import Poset
+        from sage.combinat.posets.lattices import MeetSemilattice
         els = self.covectors()
         rels = [ (Y,X) for X in els for Y in els if Y.is_conformal_with(X) and Y.support().issubset(X.support())]
-        return Poset((els, rels), cover_relations=False, facade=facade)
-
-    def face_lattice(self, facade=False):
-        r"""
-        Returns the (big) face lattice.
-
-        The *(big) face lattice* is the (big) face poset with a top element added.
-
-        EXAMPLES::
-
-            sage: from oriented_matroids import OrientedMatroid
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
-            sage: M = OrientedMatroid(C, key='covector')
-            sage: M.face_lattice()
-            Finite lattice containing 14 elements
-
-        """
-        from sage.combinat.posets.lattices import LatticePoset
-        els = copy.deepcopy(self.covectors())
-        rels = [ (Y,X) for X in els for Y in els if Y.is_conformal_with(X) and Y.support().issubset(X.support())]
-
-        # Add top element
-        for i in els:
-            rels.append((i,1))
-        els.append(1)
-        return LatticePoset((els,rels), cover_relations=False, facade=facade)
+        P = Poset((els, rels), cover_relations=False, facade=facade)
+        return MeetSemilattice(P)
 
