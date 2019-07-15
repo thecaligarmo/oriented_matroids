@@ -1,6 +1,6 @@
 r"""
 Oriented matroid from hyperplane arrangements
----------------------------------------
+---------------------------------------------
 
 This implements an oriented matroid from hyperplane arrangements
 
@@ -41,6 +41,22 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     EXAMPLES::
 
         sage: from oriented_matroids import OrientedMatroid
+        sage: A = hyperplane_arrangements.braid(3)
+        sage: M = OrientedMatroid(A); M
+        Hyperplane arrangement oriented matroid of rank 2
+        sage: A = hyperplane_arrangements.braid(5)
+        sage: M = OrientedMatroid(A); M
+        Hyperplane arrangement oriented matroid of rank 4
+        sage: A = hyperplane_arrangements.Catalan(3)
+        sage: M = OrientedMatroid(A); M
+        Traceback (most recent call last):
+        ...
+        ValueError: Hyperplane arrangements must be central to be an oriented matroid.
+        sage: G = Graph({1:[2,4],2:[3,4]})
+        sage: A = hyperplane_arrangements.graphical(G)
+        sage: M = OrientedMatroid(A); M
+        Hyperplane arrangement oriented matroid of rank 3
+
 
     .. SEEALSO::
 
@@ -87,9 +103,6 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     def is_valid(self):
         """
         Return whether or not the arrangement is an oriented matroid
-
-        EXAMPLES::
-
         """
 
         if not self.arrangement().is_central():
@@ -100,6 +113,17 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     def arrangement(self):
         """
         Return the arrangement.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: G = Graph({1:[2,4],2:[3,4]})
+            sage: A = hyperplane_arrangements.graphical(G)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 3
+            sage: M.arrangement()
+            Arrangement <t1 - t2 | t1 - t3 | t0 - t1 | t0 - t3>
+
         """
         return self._arrangement
 
@@ -115,11 +139,27 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
     def deletion(self, hyperplanes):
         """
         Return the hyperplane arrangement oriented matroid with hyperplanes removed
-        """
-        
-        # self.arrangement().deletion(H); "H a hyperplane
-        return self.parent().deletion(hyperplanes)
 
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: G = Graph({1:[2,4],2:[3,4,5],3:[4,6,8],4:[7],5:[8]})
+            sage: A = hyperplane_arrangements.graphical(G)
+            sage: H = [A.hyperplanes()[i] for i in range(2,5)]
+            sage: M = OrientedMatroid(A)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 7
+            sage: M2 = M.deletion(H); M2
+            Hyperplane arrangement oriented matroid of rank 6
+
+        """
+        A = self.arrangement()
+        if isinstance(hyperplanes, list) or isinstance(hyperplanes, tuple):
+            for h in hyperplanes:
+                A = A.deletion(h)
+        else:
+            A = A.deletion(h)
+        return HyperplaneArrangementOrientedMatroid(A)
 
     def face_poset(self, facade=False):
         r"""
@@ -131,6 +171,13 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
+            sage: G = Graph({1:[2,4],2:[3,4]})
+            sage: A = hyperplane_arrangements.graphical(G)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 3
+            sage: M.face_poset()
+            Finite poset containing 39 elements
+
 
         """
         from sage.combinat.posets.posets import Poset
@@ -147,6 +194,12 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
+            sage: G = Graph({1:[2,4],2:[3,4]})
+            sage: A = hyperplane_arrangements.graphical(G)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 3
+            sage: M.face_lattice()
+            Finite lattice containing 40 elements
 
         """
         from sage.combinat.posets.lattices import LatticePoset

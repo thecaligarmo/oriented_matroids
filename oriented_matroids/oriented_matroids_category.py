@@ -273,9 +273,6 @@ class OrientedMatroids(Category):
 
                 \mathcal{C} / A = \left\{ X\mid_{E \backslash A} : X \in \mathcal{C} \text{ and} A \subseteq X^0 \right\}
 
-            EXAMPLES::
-
-
             """
                 #sage: from oriented_matroids import OrientedMatroid
                 #sage: A = hyperplane_arrangements.braid(3)

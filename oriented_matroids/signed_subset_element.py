@@ -84,6 +84,7 @@ ndset::
 
         - :class:`oriented_matroids.oriented_Matroid.OrientedMatroid`
         - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+
     """
     def __init__(self, parent=None, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
         """

@@ -22,6 +22,7 @@ Representations
 
     oriented_matroids/circuit_oriented_matroid
     oriented_matroids/covector_oriented_matroid
+    oriented_matroids/hyperplane_arrangement_oriented_matroid
     oriented_matroids/vector_oriented_matroid
 
 Elements
