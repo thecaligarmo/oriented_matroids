@@ -181,7 +181,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
                         raise ValueError("weak elimination failed")
 
         if not zero_found:
-            raise ValueError("Empty set is required")
+            raise ValueError("All zero covector is required")
 
         return True
 

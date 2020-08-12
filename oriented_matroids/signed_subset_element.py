@@ -254,7 +254,7 @@ ndset::
        #     return x
        # return x / abs(x) * -1
 
-    def __nonzero__(self):
+    def __bool__(self):
         """
         Returns whether an element is not considered a zero.
 
