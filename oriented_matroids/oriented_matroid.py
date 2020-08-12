@@ -139,9 +139,10 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
         if not key == 'circuit':
             raise ValueError(
                 'Digraphs are currently only implemented using circuit axioms')
+
         # we need to add negative edges in order to do all simple cycles
         digraph = copy.copy(data)
-        edges = copy.copy(digraph.edges())
+        edges = copy.copy(list(digraph.edges()))
         groundset = []
         if len(edges) != len(set(edges)):
             raise ValueError('Edge labels need to be unique')
