@@ -24,7 +24,8 @@ from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_subset_element import SignedSubsetElement
 
-class CircuitOrientedMatroid(UniqueRepresentation,Parent):
+
+class CircuitOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using circuit axioms.
 
@@ -56,7 +57,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         Circuit oriented matroid of rank 1
         sage: M.groundset()
         (0,)
-        
+
         sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
         sage: M = OrientedMatroid(C,key='circuit'); M
         Circuit oriented matroid of rank 4
@@ -77,22 +78,29 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         """
 
         category = OrientedMatroids()
-        return super(CircuitOrientedMatroid, cls).__classcall__(cls, data=data, groundset = groundset, category=category)
+        return super(CircuitOrientedMatroid, cls) \
+            .__classcall__(cls,
+                           data=data,
+                           groundset=groundset,
+                           category=category)
 
-    def __init__(self,data, groundset=None, category=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self,category=category)
+        Parent.__init__(self, category=category)
 
         # Set up our circuits
         circuits = []
         if data:
             for d in data:
                 # Convert to the appropriate element class
-                circuits.append(self.element_class(self,data=d, groundset=groundset))
+                circuits.append(self.element_class(self,
+                                                   data=d,
+                                                   groundset=groundset))
 
-        # If our groundset is none, make sure the groundsets are the same for all elements
+        # If our groundset is none, make sure the groundsets are the same for
+        # all elements
         if groundset is None and len(circuits) > 0:
             groundset = circuits[0].groundset()
             for X in circuits:
@@ -104,7 +112,6 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
             self._groundset = None
         else:
             self._groundset = tuple(groundset)
-
 
     def is_valid(self):
         """
@@ -122,13 +129,13 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
             Traceback (most recent call last):
             ...
             ValueError: Only same/opposites can have same support
-            
+
             sage: C3 = [ ((),()) , ((1,4),(2,3)) , ((2,3),(1,4)) ]
             sage: OrientedMatroid(C3,key='circuit',groundset=[1,2,3,4])
             Traceback (most recent call last):
             ...
             ValueError: Empty set not allowed
-            
+
             sage: C4= [ ((1,),()) , ((1,4),(2,3)) , ((2,3),(1,4)) ]
             sage: OrientedMatroid(C4,key='circuit',groundset=[1,2,3,4])
             Traceback (most recent call last):
@@ -137,7 +144,7 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
 
         """
         circuits = self.circuits()
-        
+
         for X in circuits:
             # Axiom 1: Make sure empty is not present
             if X.is_zero():
@@ -149,7 +156,8 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
                 # Axiom 3: supports must not be contained
                 if X.support().issubset(Y.support()):
                     if X != Y and X != -Y:
-                        raise ValueError("Only same/opposites can have same support")
+                        raise ValueError(
+                            "Only same/opposites can have same support")
                 # Axiom 4: Weak elimination
                 if X != -Y:
                     E = X.positives().intersection(Y.negatives())
@@ -169,7 +177,6 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
 
         return True
 
-    
     def _repr_(self):
         """
         Return a string representation of ``self``.
@@ -184,10 +191,10 @@ class CircuitOrientedMatroid(UniqueRepresentation,Parent):
         """
         try:
             rep = "Circuit oriented matroid of rank {}".format(self.rank())
-        except:
+        except ValueError:
             rep = "Circuit oriented matroid"
         return rep
-    
+
     def circuits(self):
         """
         Shorthand for :meth:`~oriented_matroids.oriented_matroids_category.OrientedMatroids.elements`.

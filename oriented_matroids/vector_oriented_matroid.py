@@ -58,7 +58,8 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         Vector oriented matroid of rank 1
         sage: M.groundset()
         (0,)
-        sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e']); M
+        sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e'])
+        sage: M
         Vector oriented matroid of rank 1
         sage: M.groundset()
         ('e',)
@@ -77,21 +78,24 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(VectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
+        return super(VectorOrientedMatroid, cls) \
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None, category=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self,category = category)
+        Parent.__init__(self, category=category)
 
         # Set up our vectors
         vectors = []
         for d in data:
             # Use the appropriate element
-            vectors.append(self.element_class(self,data=d, groundset=groundset))
+            vectors.append(self.element_class(
+                self, data=d, groundset=groundset))
 
-        # If our groundset is none, make sure the groundsets are the same for all elements
+        # If our groundset is none, make sure the groundsets are the same for
+        # all elements
         if groundset is None and len(vectors) > 0:
             groundset = vectors[0].groundset()
             for X in vectors:
@@ -103,7 +107,6 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             self._groundset = groundset
         else:
             self._groundset = tuple(groundset)
-
 
     def is_valid(self):
         """
@@ -117,13 +120,13 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
-            
+
             sage: V3 = [[1,1],[-1,-1],[0,-1],[0,1],[-1,0],[1,0]]
             sage: OrientedMatroid(V3, key='vector')
             Traceback (most recent call last):
             ...
             ValueError: Composition must be in vectors
-            
+
             sage: V4 = [[1,1],[-1,-1]]
             sage: OrientedMatroid(V4, key='vector')
             Traceback (most recent call last):
@@ -132,7 +135,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         """
         vectors = self.vectors()
-        
+
         zero_found = False
         for X in vectors:
             # Axiom 1: Make sure empty is not present
@@ -162,7 +165,9 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
                     for Z in vectors:
                         if found:
                             break
-                        if Z.positives().issubset(p) and Z.negatives().issubset(n) and ze.issubset(Z.support()):
+                        if Z.positives().issubset(p) \
+                                and Z.negatives().issubset(n) \
+                                and ze.issubset(Z.support()):
                             found = True
                     if not found:
                         raise ValueError("vector elimination failed")
@@ -186,7 +191,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         try:
             rep = "Vector oriented matroid of rank {}".format(self.rank())
-        except:
+        except ValueError:
             rep = "Vector oriented matroid"
         return rep
 

@@ -24,8 +24,8 @@ from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
-
 import copy
+
 
 class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
@@ -53,18 +53,20 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     EXAMPLES::
 
         sage: from oriented_matroids import OrientedMatroid
-        sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
+        sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
+        sage: M
         Covector oriented matroid of rank 1
         sage: M.groundset()
         ('e',)
 
-        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-        ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+        ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector'); M
         Covector oriented matroid of rank 3
         sage: M.groundset()
         (0, 1, 2)
-        sage: M = OrientedMatroid(C, key='covector',groundset=['h1','h2','h3']);
+        sage: gs = ['h1', 'h2', 'h3']
+        sage: M = OrientedMatroid(C, key='covector', groundset=gs)
         sage: M.groundset()
         ('h1', 'h2', 'h3')
 
@@ -82,9 +84,10 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(CovectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
+        return super(CovectorOrientedMatroid, cls) \
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None, category=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``
         """
@@ -94,8 +97,11 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         covectors = []
         for d in data:
             # Ensure we're using the right type.
-            covectors.append(self.element_class(self,data=d, groundset=groundset))
-        # If our groundset is none, make sure the groundsets are the same for all elements
+            covectors.append(self.element_class(self,
+                                                data=d,
+                                                groundset=groundset))
+        # If our groundset is none, make sure the groundsets are the same for
+        # all elements
         if groundset is None and len(covectors) > 0:
             groundset = covectors[0].groundset()
             for X in covectors:
@@ -108,14 +114,13 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         else:
             self._groundset = tuple(groundset)
 
-
     def _repr_(self):
         """
         Return a string representation of ``self``.
         """
         try:
             rep = "Covector oriented matroid of rank {}".format(self.rank())
-        except:
+        except ValueError:
             rep = "Covector oriented matroid"
         return rep
 
@@ -126,7 +131,8 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
-            sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
+            sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
+            sage: M
             Covector oriented matroid of rank 1
 
             sage: C2 = [ [0,0],[1,1]]
@@ -134,14 +140,14 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
-            
+
             sage: C3 = [[1,1],[-1,-1],[0,1],[1,0],[-1,0],[0,-1]]
             sage: OrientedMatroid(C3, key='covector')
             Traceback (most recent call last):
             ...
             ValueError: Composition must be in vectors
-            
-            
+
+
             sage: C4 = [ [0,0],[1,1],[-1,-1],[1,-1],[-1,1]]
             sage: M = OrientedMatroid(C4, key='covector'); M
             Traceback (most recent call last):
@@ -150,7 +156,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
         """
         covectors = self.covectors()
-        
+
         zero_found = False
         for X in covectors:
             # Axiom 1: Make sure empty is not present
@@ -196,13 +202,15 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         Returns the (big) face poset.
 
         The *(big) face poset* is the poset on covectors such that `X \leq Y`
-        if and onlyif `S(X,Y) = \emptyset` and `\underline{Y} \subseteq \underline{X}`.
+        if and only if `S(X,Y) = \emptyset` and
+        `\underline{Y} \subseteq \underline{X}`.
 
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
             sage: M = OrientedMatroid(C, key='covector')
             sage: M.face_poset()
             Finite poset containing 13 elements
@@ -212,20 +220,27 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         from sage.combinat.posets.posets import Poset
         els = self.covectors()
-        rels = [ (Y,X) for X in els for Y in els if Y.is_conformal_with(X) and Y.support().issubset(X.support())]
+        rels = [
+            (Y, X)
+            for X in els
+            for Y in els
+            if Y.is_conformal_with(X) and Y.support().issubset(X.support())
+        ]
         return Poset((els, rels), cover_relations=False, facade=facade)
 
     def face_lattice(self, facade=False):
         r"""
         Returns the (big) face lattice.
 
-        The *(big) face lattice* is the (big) face poset with a top element added.
+        The *(big) face lattice* is the (big) face poset with a top element
+        added.
 
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
             sage: M = OrientedMatroid(C, key='covector')
             sage: M.face_lattice()
             Finite lattice containing 14 elements
@@ -233,11 +248,15 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         from sage.combinat.posets.lattices import LatticePoset
         els = copy.deepcopy(self.covectors())
-        rels = [ (Y,X) for X in els for Y in els if Y.is_conformal_with(X) and Y.support().issubset(X.support())]
+        rels = [
+            (Y, X)
+            for X in els
+            for Y in els
+            if Y.is_conformal_with(X) and Y.support().issubset(X.support())
+        ]
 
         # Add top element
         for i in els:
-            rels.append((i,1))
+            rels.append((i, 1))
         els.append(1)
-        return LatticePoset((els,rels), cover_relations=False, facade=facade)
-
+        return LatticePoset((els, rels), cover_relations=False, facade=facade)

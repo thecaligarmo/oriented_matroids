@@ -26,7 +26,7 @@ AUTHORS:
 
 """
 
-#*****************************************************************************
+# *****************************************************************************
 #       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
@@ -34,12 +34,14 @@ AUTHORS:
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
 #                  http://www.gnu.org/licenses/
-#*****************************************************************************
+# *****************************************************************************
 
-from sage.geometry.hyperplane_arrangement.arrangement import HyperplaneArrangementElement
+from sage.geometry.hyperplane_arrangement.arrangement \
+    import HyperplaneArrangementElement
 from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
 import copy
+
 
 def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
     r"""
@@ -52,10 +54,10 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
     - ``groundset`` -- (default: ``None``) is the ground set that will be
       used for the oriented matroid.
-    
+
     - ``data`` -- (default: ``None``) the data that will be used to define
       the oriented matroids. It can be one of the following:
-      
+
       + :class:`SignedSubsetElement`
       + A tuple with positive, negative, and zero sets.
 
@@ -70,7 +72,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
 
     EXAMPLES::
-        
+
         sage: from oriented_matroids import OrientedMatroid
         sage: OrientedMatroid([[0]],key='covector')
         Covector oriented matroid of rank 0
@@ -126,16 +128,17 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
     """
 
-
     # Instantiate oriented matroid
     OM = None
 
-    # If we have a hyperplane arrangement we need to force the key to be an arrangement
+    # If we have a hyperplane arrangement we need to force the key to be an
+    # arrangement,
     if isinstance(data, HyperplaneArrangementElement):
         key = "arrangement"
     elif isinstance(data, DiGraph):
         if not key == 'circuit':
-            raise ValueError('Digraphs are currently only implemented using circuit axioms')
+            raise ValueError(
+                'Digraphs are currently only implemented using circuit axioms')
         # we need to add negative edges in order to do all simple cycles
         digraph = copy.copy(data)
         edges = copy.copy(digraph.edges())
@@ -147,7 +150,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
         # Add minus edges to properly get cycles
         for e in edges:
-            digraph.add_edge(e[1],e[0],"NEG_"+str(e[2]))
+            digraph.add_edge(e[1], e[0], "NEG_"+str(e[2]))
             groundset.append(str(e[2]))
         # Each cycle defines a circuit
         data = []
@@ -155,7 +158,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
             p = set([])
             n = set([])
             for e in range(len(c) - 1):
-                e = str(digraph.edge_label(c[e],c[e+1]))
+                e = str(digraph.edge_label(c[e], c[e+1]))
                 if e.startswith('NEG_'):
                     n.add(e.strip('NEG_'))
                 else:
@@ -164,56 +167,56 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
             # This implies we have ee^-1 which is why it's false.
             # So we only add the true ones.
             if len(p.intersection(n)) == 0:
-                data.append([p,n])
+                data.append([p, n])
     elif isinstance(data, Matrix):
         if not key == 'chirotope':
-            raise ValueError('Matrices are currently only implemented using chirotope axioms')
+            raise ValueError(
+                'Matrices are currently only implemented using chirotope axioms')
 
-    
-
-    if key not in ["covector","vector","circuit","chirotope","arrangement"]:
+    if key not in ["covector", "vector", "circuit", "chirotope", "arrangement"]:
         raise ValueError("invalid type key")
 
-
-
-
-    # In the following cases, deep_tupler is used since we are using UniqueRepresentation
-    #   Which doesn't allow us to have non-hashable things.
+    # In the following cases, deep_tupler is used since we are using
+    # UniqueRepresentation Which doesn't allow us to have non-hashable things.
     if key == "covector":
-        from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
+        from oriented_matroids.covector_oriented_matroid \
+            import CovectorOrientedMatroid
         data = deep_tupler(data)
         if groundset is not None:
             groundset = deep_tupler(groundset)
         OM = CovectorOrientedMatroid(data, groundset=groundset)
     elif key == "circuit":
-        from oriented_matroids.circuit_oriented_matroid import CircuitOrientedMatroid
+        from oriented_matroids.circuit_oriented_matroid \
+            import CircuitOrientedMatroid
         data = deep_tupler(data)
         if groundset is not None:
             groundset = deep_tupler(groundset)
         OM = CircuitOrientedMatroid(data, groundset=groundset)
     elif key == "vector":
-        from oriented_matroids.vector_oriented_matroid import VectorOrientedMatroid
+        from oriented_matroids.vector_oriented_matroid \
+            import VectorOrientedMatroid
         data = deep_tupler(data)
         if groundset is not None:
             groundset = deep_tupler(groundset)
         OM = VectorOrientedMatroid(data, groundset=groundset)
     elif key == "arrangement":
-        from oriented_matroids.hyperplane_arrangement_oriented_matroid import HyperplaneArrangementOrientedMatroid
+        from oriented_matroids.hyperplane_arrangement_oriented_matroid \
+            import HyperplaneArrangementOrientedMatroid
         A = copy.copy(data)
         if groundset is None:
             groundset = deep_tupler(A.hyperplanes())
         else:
             groundset = deep_tupler(groundset)
-        OM = HyperplaneArrangementOrientedMatroid(A,groundset=groundset)
+        OM = HyperplaneArrangementOrientedMatroid(A, groundset=groundset)
 
     if OM is None:
-        raise NotImplementedError("Oriented matroid of type {} is not implemented".format(key))
-    
+        raise NotImplementedError(
+            "Oriented matroid of type {} is not implemented".format(key))
+
     if OM.is_valid():
         return OM
 
     raise ValueError("Oriented matroid is not valid")
-
 
 
 def deep_tupler(obj):

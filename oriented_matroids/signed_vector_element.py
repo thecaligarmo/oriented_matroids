@@ -22,6 +22,7 @@ AUTHORS:
 ##############################################################################
 from oriented_matroids.signed_subset_element import SignedSubsetElement
 
+
 class SignedVectorElement(SignedSubsetElement):
     r"""
     Creates an oriented matroid element.
@@ -48,14 +49,14 @@ class SignedVectorElement(SignedSubsetElement):
       tuple of elements. Requires ``positives`` and ``negatives`` to be set.
 
     EXAMPLES:
-    
+
     Some examples of element constructions::
 
         sage: from oriented_matroids import OrientedMatroid
         sage: from oriented_matroids.signed_vector_element import SignedVectorElement
 
-        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-        ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+        ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector')
         sage: SignedVectorElement(M,data = (0,-1,1))
         (0,-1,1)
@@ -72,13 +73,15 @@ class SignedVectorElement(SignedSubsetElement):
         - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
         - :class:`oriented_matroids.signed_subset_element.SignedSubsetElement`
     """
-    def __init__(self, parent = None, data = None, groundset = None, positives=None, negatives=None, zeroes = None):
+
+    def __init__(self, parent=None, data=None, groundset=None, \
+                 positives=None, negatives=None, zeroes=None):
         """
         Initialize ``self``.
         """
 
-        SignedSubsetElement.__init__(self,parent,data,groundset,positives,negatives,zeroes)
-    
+        SignedSubsetElement.__init__(
+            self, parent, data, groundset, positives, negatives, zeroes)
 
     def _repr_(self):
         """
@@ -89,8 +92,9 @@ class SignedVectorElement(SignedSubsetElement):
             sage: from oriented_matroids import OrientedMatroid
             sage: from oriented_matroids.signed_vector_element import SignedVectorElement
 
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
             sage: M = OrientedMatroid(C, key='covector')
             sage: SignedVectorElement(M,data = (1,1,-1))
             (1,1,-1)
@@ -107,12 +111,13 @@ class SignedVectorElement(SignedSubsetElement):
             sage: from oriented_matroids import OrientedMatroid
             sage: from oriented_matroids.signed_vector_element import SignedVectorElement
 
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
             sage: M = OrientedMatroid(C, key='covector')
             sage: latex(SignedVectorElement(M,data = (1,1,-1)))
             \left(1,1,-1\right)
 
         """
-        return "\\left(" + ','.join([str(self(e)) for e in self.groundset()]) + "\\right)"
-
+        ground_set = [str(self(e)) for e in self.groundset()]
+        return "\\left(" + ','.join(ground_set) + "\\right)"
