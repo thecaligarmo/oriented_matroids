@@ -54,13 +54,13 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1]],key='circuit'); M
-        Circuit oriented matroid of rank 1
+        Circuit oriented matroid of rank 0
         sage: M.groundset()
         (0,)
 
         sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
         sage: M = OrientedMatroid(C,key='circuit'); M
-        Circuit oriented matroid of rank 4
+        Circuit oriented matroid of rank 3
         sage: M.groundset()
         (1, 2, 3, 4)
 
@@ -149,11 +149,11 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
             # Axiom 1: Make sure empty is not present
             if X.is_zero():
                 raise ValueError("Empty set not allowed")
-            # Axiom 2: Make sure negative exists
+            # Axiom 2: (symmetry) Make sure negative exists
             if -X not in circuits:
                 raise ValueError("Every element needs an opposite")
             for Y in circuits:
-                # Axiom 3: supports must not be contained
+                # Axiom 3: (incomparability) supports must not be contained
                 if X.support().issubset(Y.support()):
                     if X != Y and X != -Y:
                         raise ValueError(
@@ -200,3 +200,26 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         Shorthand for :meth:`~oriented_matroids.oriented_matroids_category.OrientedMatroids.elements`.
         """
         return self.elements()
+
+    def matroid(self):
+        r"""
+        Returns the underlying matroid.
+
+        Given an oriented matroid defined using circuits, the *underlying
+        matroid* is the (circuit) matroid whose ground set is the ground set of
+        the oriented matroid and the circuits are the set of supports of all
+        the signed subsets.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: C = [ ((1,),(2,)) , ((2,),(1,)) , ((3,),(4,)) , ((4,),(3,))]
+            sage: M = OrientedMatroid(C,key='circuit',groundset=[1,2,3,4])
+            sage: M.matroid()
+            Matroid of rank 2 on 4 elements with 4 bases
+
+        """
+        from sage.matroids.constructor import Matroid
+        circs = list(set([frozenset(X.support()) for X in self.elements()]))
+        return Matroid(groundset=self.groundset(), circuits=circs)
+

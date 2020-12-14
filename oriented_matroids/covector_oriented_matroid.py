@@ -31,6 +31,9 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using covector axioms.
 
+    According to  Definition 3.7.1 in [BLSWZ1999]_ a *covector* of an oriented
+    matroid is any composition of cocircuits.
+
     This implements an oriented matroid using the covector axioms. For this
     let `\mathcal{L}` be a set of covectors and `E` a ground set. Then
     a pair `M = (E,\mathcal{L})` is an oriented matroid using the covectors
@@ -62,7 +65,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
         ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector'); M
-        Covector oriented matroid of rank 3
+        Covector oriented matroid of rank 2
         sage: M.groundset()
         (0, 1, 2)
         sage: gs = ['h1', 'h2', 'h3']
@@ -79,11 +82,12 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-        category = OrientedMatroids()
+        if category is None:
+            category = OrientedMatroids()
         return super(CovectorOrientedMatroid, cls) \
             .__classcall__(cls, data, groundset=groundset, category=category)
 
@@ -196,6 +200,40 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         Shorthand for :meth:`~oriented_matroids.oriented_matroids_category.OrientedMatroids.elements`
         """
         return self.elements()
+
+    def matroid(self):
+        r"""
+        Returns the underlying matroid.
+
+        Given a covector oriented matroid, the *underlying matroid* is the
+        (flat) matroid whose collection of flats is given by the set of
+        zeroes of all signed vectors.
+
+        *Note* that matroids as defined through flats are not defined in sage
+        version 9.2 and therefore it must be translated to another one of the
+        definitions.
+
+        Instead, we order our flats by inclusion; giving us a rank function and
+        use the rank function definition of matroid.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
+            sage: M = OrientedMatroid(C, key='covector')
+            sage: M.matroid()
+            Matroid of rank 2 on 3 elements
+
+
+        """
+        from sage.matroids.constructor import Matroid
+        from sage.combinat.posets.posets import Poset
+        flats = list(set([frozenset(X.zeroes()) for X in self.elements()]))
+        inc = lambda a,b: a.issubset(b)
+        rf = Poset((flats, inc)).rank_function()
+        return Matroid(groundset=self.groundset(), rank_function=rf)
 
     def face_poset(self, facade=False):
         r"""

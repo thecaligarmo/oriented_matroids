@@ -107,27 +107,18 @@ class OrientedMatroids(Category):
             """
             return self._elements
 
+        def dual(self):
+            """
+            Return the dual oriented matroid.
+            """
+            pass
+
         @cached_method
         def matroid(self):
             r"""
             Returns the underlying matroid.
-
-            Given an oriented matroid, the *underlying matroid* is the matroid
-            whose ground set is the ground set of the oriented matroid
-            and the elements are the set of supports of all the signed
-            subsets.
-
-            EXAMPLES::
-
-                sage: from oriented_matroids import OrientedMatroid
-                sage: A = hyperplane_arrangements.braid(3)
-                sage: M = OrientedMatroid(A, key='covector'); M.matroid()
-                Matroid of rank 3 on 3 elements with 1 bases
-
             """
-            from sage.matroids.constructor import Matroid
-            data = list(set([frozenset(X.support()) for X in self.elements()]))
-            return Matroid(groundset=self.groundset(), data=data)
+            pass
 
         @cached_method
         def rank(self):
@@ -142,10 +133,10 @@ class OrientedMatroids(Category):
                 sage: from oriented_matroids import OrientedMatroid
                 sage: A = hyperplane_arrangements.braid(3)
                 sage: M = OrientedMatroid(A, key='covector'); M.rank()
-                3
+                2
                 sage: A = hyperplane_arrangements.braid(4)
                 sage: M = OrientedMatroid(A, key='covector'); M.rank()
-                6
+                3
             """
             return self.matroid().rank()
 
@@ -244,7 +235,7 @@ class OrientedMatroids(Category):
                 sage: from oriented_matroids import OrientedMatroid
                 sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
                 sage: M = OrientedMatroid(C,key='circuit'); M
-                Circuit oriented matroid of rank 4
+                Circuit oriented matroid of rank 3
                 sage: D = M.deletion(1)
                 sage: D.elements()
                 [+: 4

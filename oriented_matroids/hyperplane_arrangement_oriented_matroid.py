@@ -19,13 +19,12 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
+from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
-from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
-class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
+class HyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     r"""
     An oriented matroid implemented from a hyperplane arrangement.
 
@@ -48,14 +47,14 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
-    Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-        category = OrientedMatroids()
+        if category is None:
+            category = OrientedMatroids()
         return super(HyperplaneArrangementOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
@@ -69,6 +68,7 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         Parent.__init__(self, category=category)
 
         self._arrangement = data
+
         if data and groundset is None:
             groundset = tuple(data.hyperplanes())
 
@@ -76,6 +76,11 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
             self._groundset = groundset
         else:
             self._groundset = tuple(groundset)
+
+        # Set up our covectors after our groundset is made
+        faces = [i[0] for i in self._arrangement.closed_faces()]
+        self._elements = [self.element_class(
+            self, data=f, groundset=self._groundset) for f in faces]
 
     def _repr_(self):
         """
@@ -107,16 +112,6 @@ class HyperplaneArrangementOrientedMatroid(UniqueRepresentation, Parent):
         Return the arrangement.
         """
         return self._arrangement
-
-    def elements(self):
-        """
-        Return the elements.
-        """
-
-        faces = [i[0] for i in self.arrangement().closed_faces()]
-        self._elements = [self.element_class(
-            self, data=f, groundset=self.groundset()) for f in faces]
-        return self._elements
 
     def deletion(self, hyperplanes):
         """

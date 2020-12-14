@@ -38,6 +38,8 @@ AUTHORS:
 
 from sage.geometry.hyperplane_arrangement.arrangement \
     import HyperplaneArrangementElement
+from sage.geometry.triangulation.point_configuration \
+    import PointConfiguration
 from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
 import copy
@@ -83,7 +85,7 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
 
         sage: D = DiGraph({'v1':{'v2':1,'v3':2,'v4':3},'v2':{'v3':4,'v4':5},'v3':{'v4':6}})
         sage: M = OrientedMatroid(D,key="circuit"); M
-        Circuit oriented matroid of rank 4
+        Circuit oriented matroid of rank 3
         sage: len(M.circuits())
         14
 
@@ -108,6 +110,13 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
          (-1,1,1),
          (-1,1,-1),
          (-1,-1,-1)]
+
+        sage: PC = PointConfiguration([[1,0,0],[0,1,0],[0,0,1],[1/2,1/2,0],[0,1/2,1/2],[1/3,1/3,1/3]])
+        sage: M = OrientedMatroid(PC); M
+        Circuit oriented matroid of rank 3
+        sage: M.matroid()
+        Matroid of rank 3 on 6 elements with 16 bases
+
 
     OUTPUT:
 
@@ -135,6 +144,11 @@ def OrientedMatroid(data=None, groundset=None, key="covector", **kwds):
     # arrangement,
     if isinstance(data, HyperplaneArrangementElement):
         key = "arrangement"
+    elif isinstance(data, PointConfiguration):
+        key = "circuit"
+        ci = [(C[0], C[2], C[1]) for C in data.circuits()]
+        ci += [(C[2], C[0], C[1]) for C in data.circuits()]
+        data = ci
     elif isinstance(data, DiGraph):
         if not key == 'circuit':
             raise ValueError(

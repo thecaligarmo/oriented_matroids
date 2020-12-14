@@ -29,6 +29,9 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using vector axioms.
 
+    According to  Definition 3.7.1 in [BLSWZ1999]_ a *vector* of an oriented
+    matroid is any composition of circuits.
+
     This implements an oriented matroid using the vectors axioms. For this
     let `\mathcal{V}` be a set of signed subsets and `E` a ground set. Then
     a pair `M = (E,\mathcal{V})` is an oriented matroid using the vector
@@ -44,6 +47,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
           `(X \backslash Y) \cup (Y \backslash X) \cup (X^+ \cap Y^+) \cup (X^- \cap Y^-) \subseteq Z`.
 
 
+
     INPUT:
 
     - ``data`` -- a tuple containing SigneVectorElement elements or data
@@ -55,12 +59,12 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
-        Vector oriented matroid of rank 1
+        Vector oriented matroid of rank 0
         sage: M.groundset()
         (0,)
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e'])
         sage: M
-        Vector oriented matroid of rank 1
+        Vector oriented matroid of rank 0
         sage: M.groundset()
         ('e',)
 
@@ -186,7 +190,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             sage: from oriented_matroids import OrientedMatroid
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector'); M
-            Vector oriented matroid of rank 2
+            Vector oriented matroid of rank 1
 
         """
         try:
@@ -200,3 +204,39 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         Shorthand for :meth:`~sage.matroids.oriented_matroids.OrientedMatroids.elements`
         """
         return self.elements()
+
+    def to_circuit(self):
+        """
+        Return a circuit oriented matroid.
+
+        Given a vector oriented matroid, the set of circuits is the set
+        `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
+        subsets.
+        """
+        from sage.combinat.posets.posets import Poset
+        from oriented_matroids import OrientedMatroid
+        # remove 0
+        vecs = [v for v in self.vectors() if not v.is_zero()]
+        P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+        return OrientedMatroid(P.minimal_elements(), key='circuit')
+
+
+    def matroid(self):
+        r"""
+        Returns the underlying matroid.
+
+        Given an oriented matroid defined using vector, the *underlying
+        matroid* is the (circuit) matroid whose ground set is the ground set of
+        the oriented matroid and the circuits are the set of supports of all
+        the signed subsets.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: V = [[1,1],[-1,-1],[0,0]]
+            sage: M = OrientedMatroid(V, key='vector')
+            sage: M.matroid()
+            Matroid of rank 1 on 2 elements with 2 bases
+
+        """
+        return self.to_circuit().matroid()

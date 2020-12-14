@@ -123,10 +123,11 @@ ndset::
                 if groundset is None:
                     self._z = set([])
                 else:
-                    self._z = set(groundset).difference(
-                        self._p).difference(self._n)
+                    gs = set(groundset)
+                    self._z = gs.difference(self._p).difference(self._n)
             else:
                 self._z = set(zeroes)
+
         # If we already have a signed subset element, use it's data
         elif isinstance(data, SignedSubsetElement):
             self._p = data.positives()
@@ -152,6 +153,7 @@ ndset::
                         self._z.add(label)
                     else:
                         raise ValueError("Must be tuple of -1, 0, 1")
+
             # If we have a tuple of tuples
             else:
                 self._p = set(data[0])
@@ -222,8 +224,10 @@ ndset::
         """
         Return hashed string of signed subset.
         """
-        st = self._p.union(self._n)
-        return hash(frozenset(st))
+        fsp = frozenset(self._p)
+        fsn = frozenset(self._n)
+        fsz = frozenset(self._z)
+        return hash((fsp, fsn, fsz))
 
     def __neg__(self):
         """
@@ -264,7 +268,7 @@ ndset::
         # return x / abs(x) * -1
 
     def __bool__(self):
-        """
+        r"""
         Returns whether an element is not considered a zero.
 
         For an oriented matroid, we consider the empty set
@@ -274,6 +278,13 @@ ndset::
         if len(self.support()) > 0:
             return True
         return False
+
+    def __iter__(self):
+        """
+        Returns an iter version of self.
+        """
+        for e in self.groundset():
+            yield self(e)
 
     def _repr_(self):
         """
@@ -300,7 +311,7 @@ ndset::
             "0: " + ','.join(z)
 
     def _latex_(self):
-        """
+        r"""
         Return a latex representation of the signed subset.
 
         EXAMPLES::
@@ -309,10 +320,6 @@ ndset::
             sage: from oriented_matroids.signed_subset_element import SignedSubsetElement
             sage: C = [ ((1,4),(2,3)) , ((2,3),(1,4)) ]
             sage: M = OrientedMatroid(C,key='circuit')
-            sage: SignedSubsetElement(M,data = ((1,4),(2,3)))
-            +: 1,4
-            -: 2,3
-            0:
             sage: latex(SignedSubsetElement(M,data = ((1,4),(2,3))))
             \left( \left{1,4\right},\left{2,3\right} \right)
 
@@ -479,9 +486,22 @@ ndset::
         Return if the two elements are conformal.
 
         Two elements `X` and `Y` are *conformal* if
-        `S(X,Y) = \emptyset`.
+        `S(X,Y) = \emptyset`. This is true if and only if `X^+ \subseteq Y^+`
+        and `X^- \subseteq Y^-`.
         """
         return len(self.separation_set(other)) == 0
+
+    def is_restriction_of(self, other):
+        """
+        Return if `self` is a restriction of `other`.
+
+        A signed subset `X` is a *restriction* of a signed subset `Y` if
+        `X^+ \subsetex Y^+` and `X^- \subseteq Y^-`. If `X` is a restriction of
+        `Y` we sometimes say `X` conforms to `Y`. This should not be mistaken
+        with *is conformal with*.
+        """
+        return self.positives().issubset(other.positives()) \
+            and self.negatives().issubset(other.negatives())
 
     def is_tope(self):
         r"""
