@@ -18,3 +18,7 @@ For convenience this package contains a makefile with this and other often used 
 `$ make install`
 
 Note that you might need to alter the make file in order for this to run properly if your sage is located in another directory.
+
+### Common errors
+
+If you get "SSL" errors, try the fixes found on: [https://ask.sagemath.org/question/51130/ssl-error-using-sage-pip-install-to-download-a-package/](ask sagemath)

@@ -29,6 +29,9 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using vector axioms.
 
+    According to  Definition 3.7.1 in [BLSWZ1999]_ a *vector* of an oriented
+    matroid is any composition of circuits.
+
     This implements an oriented matroid using the vectors axioms. For this
     let `\mathcal{V}` be a set of signed subsets and `E` a ground set. Then
     a pair `M = (E,\mathcal{V})` is an oriented matroid using the vector
@@ -44,6 +47,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
           `(X \backslash Y) \cup (Y \backslash X) \cup (X^+ \cap Y^+) \cup (X^- \cap Y^-) \subseteq Z`.
 
 
+
     INPUT:
 
     - ``data`` -- a tuple containing SigneVectorElement elements or data
@@ -55,11 +59,12 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         sage: from oriented_matroids import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
-        Vector oriented matroid of rank 1
+        Vector oriented matroid of rank 0
         sage: M.groundset()
         (0,)
-        sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e']); M
-        Vector oriented matroid of rank 1
+        sage: M = OrientedMatroid([[1],[-1],[0]], key='vector', groundset=['e'])
+        sage: M
+        Vector oriented matroid of rank 0
         sage: M.groundset()
         ('e',)
 
@@ -70,7 +75,6 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
     Element = SignedVectorElement
-    key = 'vector'
 
     @staticmethod
     def __classcall__(cls, data, groundset=None):
@@ -78,33 +82,37 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         category = OrientedMatroids()
-        return super(VectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
+        return super(VectorOrientedMatroid, cls) \
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None, category=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self,category = category)
+        Parent.__init__(self, category=category)
 
         # Set up our vectors
         vectors = []
         for d in data:
             # Use the appropriate element
-            vectors.append(self.element_class(self,data=d, groundset=groundset))
+            vectors.append(self.element_class(
+                self, data=d, groundset=groundset))
 
-        # If our groundset is none, make sure the groundsets are the same for all elements
+        # If our groundset is none, make sure the groundsets are the same for
+        # all elements
         if groundset is None and len(vectors) > 0:
             groundset = vectors[0].groundset()
             for X in vectors:
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
+        self._vectors = vectors
         self._elements = vectors
+
         if groundset is None:
             self._groundset = groundset
         else:
             self._groundset = tuple(groundset)
-
 
     def is_valid(self):
         """
@@ -118,13 +126,13 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
-            
+
             sage: V3 = [[1,1],[-1,-1],[0,-1],[0,1],[-1,0],[1,0]]
             sage: OrientedMatroid(V3, key='vector')
             Traceback (most recent call last):
             ...
             ValueError: Composition must be in vectors
-            
+
             sage: V4 = [[1,1],[-1,-1]]
             sage: OrientedMatroid(V4, key='vector')
             Traceback (most recent call last):
@@ -133,7 +141,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         """
         vectors = self.vectors()
-        
+
         zero_found = False
         for X in vectors:
             # Axiom 1: Make sure empty is not present
@@ -163,7 +171,9 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
                     for Z in vectors:
                         if found:
                             break
-                        if Z.positives().issubset(p) and Z.negatives().issubset(n) and ze.issubset(Z.support()):
+                        if Z.positives().issubset(p) \
+                                and Z.negatives().issubset(n) \
+                                and ze.issubset(Z.support()):
                             found = True
                     if not found:
                         raise ValueError("vector elimination failed")
@@ -182,17 +192,48 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             sage: from oriented_matroids import OrientedMatroid
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector'); M
-            Vector oriented matroid of rank 2
+            Vector oriented matroid of rank 1
 
         """
         try:
             rep = "Vector oriented matroid of rank {}".format(self.rank())
-        except:
+        except ValueError:
             rep = "Vector oriented matroid"
         return rep
 
-    def vectors(self):
+    def matroid(self):
+        r"""
+        Returns the underlying matroid.
+
+        Given an oriented matroid defined using vector, the *underlying
+        matroid* is the (circuit) matroid whose ground set is the ground set of
+        the oriented matroid and the circuits are the set of supports of all
+        the signed subsets.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: V = [[1,1],[-1,-1],[0,0]]
+            sage: M = OrientedMatroid(V, key='vector')
+            sage: M.matroid()
+            Matroid of rank 1 on 2 elements with 2 bases
+
         """
-        Shorthand for :meth:`~sage.matroids.oriented_matroids.OrientedMatroids.elements`
+        circOM = self.to_circuit()
+        return circOM.matroid()
+
+    def circuits(self):
         """
-        return self.elements()
+        Return the circuits.
+
+        Given a vector oriented matroid, the set of circuits is the set
+        `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
+        subsets.
+        """
+        from sage.combinat.posets.posets import Poset
+        from oriented_matroids import OrientedMatroid
+        # remove 0
+        vecs = [v for v in self.vectors() if not v.is_zero()]
+        P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+        return P.minimal_elements()
+

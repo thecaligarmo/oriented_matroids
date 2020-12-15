@@ -24,12 +24,15 @@ from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
-
 import copy
+
 
 class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using covector axioms.
+
+    According to  Definition 3.7.1 in [BLSWZ1999]_ a *covector* of an oriented
+    matroid is any composition of cocircuits.
 
     This implements an oriented matroid using the covector axioms. For this
     let `\mathcal{L}` be a set of covectors and `E` a ground set. Then
@@ -53,18 +56,20 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     EXAMPLES::
 
         sage: from oriented_matroids import OrientedMatroid
-        sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
+        sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
+        sage: M
         Covector oriented matroid of rank 1
         sage: M.groundset()
         ('e',)
 
-        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-        ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+        sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+        ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
         sage: M = OrientedMatroid(C, key='covector'); M
-        Covector oriented matroid of rank 3
+        Covector oriented matroid of rank 2
         sage: M.groundset()
         (0, 1, 2)
-        sage: M = OrientedMatroid(C, key='covector',groundset=['h1','h2','h3']);
+        sage: gs = ['h1', 'h2', 'h3']
+        sage: M = OrientedMatroid(C, key='covector', groundset=gs)
         sage: M.groundset()
         ('h1', 'h2', 'h3')
 
@@ -74,18 +79,20 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
+
     Element = SignedVectorElement
-    key = 'covector'
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-        category = OrientedMatroids()
-        return super(CovectorOrientedMatroid, cls).__classcall__(cls, data, groundset=groundset, category=category)
+        if category is None:
+            category = OrientedMatroids()
+        return super(CovectorOrientedMatroid, cls) \
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self,data, groundset=None, category=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``
         """
@@ -95,20 +102,24 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         covectors = []
         for d in data:
             # Ensure we're using the right type.
-            covectors.append(self.element_class(self,data=d, groundset=groundset))
-        # If our groundset is none, make sure the groundsets are the same for all elements
+            covectors.append(self.element_class(self,
+                                                data=d,
+                                                groundset=groundset))
+        # If our groundset is none, make sure the groundsets are the same for
+        # all elements
         if groundset is None and len(covectors) > 0:
             groundset = covectors[0].groundset()
             for X in covectors:
                 if X.groundset() != groundset:
                     raise ValueError("Groundsets must be the same")
 
+        self._covectors = covectors
         self._elements = covectors
+
         if groundset is None:
             self._groundset = groundset
         else:
             self._groundset = tuple(groundset)
-
 
     def _repr_(self):
         """
@@ -116,7 +127,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         try:
             rep = "Covector oriented matroid of rank {}".format(self.rank())
-        except:
+        except ValueError:
             rep = "Covector oriented matroid"
         return rep
 
@@ -127,7 +138,8 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
-            sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'],key='covector'); M
+            sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
+            sage: M
             Covector oriented matroid of rank 1
 
             sage: C2 = [ [0,0],[1,1]]
@@ -135,14 +147,14 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
-            
+
             sage: C3 = [[1,1],[-1,-1],[0,1],[1,0],[-1,0],[0,-1]]
             sage: OrientedMatroid(C3, key='covector')
             Traceback (most recent call last):
             ...
             ValueError: Composition must be in vectors
-            
-            
+
+
             sage: C4 = [ [0,0],[1,1],[-1,-1],[1,-1],[-1,1]]
             sage: M = OrientedMatroid(C4, key='covector'); M
             Traceback (most recent call last):
@@ -151,7 +163,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
         """
         covectors = self.covectors()
-        
+
         zero_found = False
         for X in covectors:
             # Axiom 1: Make sure empty is not present
@@ -182,61 +194,40 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
                         raise ValueError("weak elimination failed")
 
         if not zero_found:
-            raise ValueError("Empty set is required")
+            raise ValueError("All zero covector is required")
 
         return True
 
-    def covectors(self):
-        """
-        Shorthand for :meth:`~oriented_matroids.oriented_matroids_category.OrientedMatroids.elements`
-        """
-        return self.elements()
-
     def matroid(self):
         r"""
-        Return the matroid of a covector oriented matroid
-        """
+        Returns the underlying matroid.
 
-        from sage.matroids.constructor import Matroid
-        from sage.matrix.constructor import matrix
+        Given a covector oriented matroid, the *underlying matroid* is the
+        (flat) matroid whose collection of flats is given by the set of
+        zeroes of all signed vectors.
 
-        els = self.elements()
-        mins = []
-        for X in els:
-            if not X.is_zero():
-                tmp = True
-                for Y in els:
-                    if Y != X and not Y.is_zero() and Y.composition(X) == X:
-                        tmp = False
-                        break
-                if tmp:
-                    mins.append(X)
-        
-        return Matroid(matrix=matrix([v.to_list() for v in mins]),groundset=self.groundset())
+        *Note* that matroids as defined through flats are not defined in sage
+        version 9.2 and therefore it must be translated to another one of the
+        definitions.
 
-    def face_poset(self, facade=False):
-        r"""
-        Returns the (big) face poset.
-
-        The *(big) face poset* is the poset on covectors such that `X \leq Y`
-        if and onlyif `S(X,Y) = \emptyset` and `\underline{Y} \subseteq \underline{X}`.
+        Instead, we order our flats by inclusion; giving us a rank function and
+        use the rank function definition of matroid.
 
         EXAMPLES::
 
             sage: from oriented_matroids import OrientedMatroid
-            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],[-1,-1,-1],
-            ....: [0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],[0,0,0]]
+            sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+            ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+            ....: [0,0,0]]
             sage: M = OrientedMatroid(C, key='covector')
-            sage: M.face_poset()
-            Finite poset containing 13 elements
-
+            sage: M.matroid()
+            Matroid of rank 2 on 3 elements
 
 
         """
+        from sage.matroids.constructor import Matroid
         from sage.combinat.posets.posets import Poset
-        from sage.combinat.posets.lattices import MeetSemilattice
-        els = self.covectors()
-        rels = [ (Y,X) for X in els for Y in els if Y.is_conformal_with(X) and Y.support().issubset(X.support())]
-        P = Poset((els, rels), cover_relations=False, facade=facade)
-        return MeetSemilattice(P)
-
+        flats = list(set([frozenset(X.zeroes()) for X in self.elements()]))
+        inc = lambda a,b: a.issubset(b)
+        rf = Poset((flats, inc)).rank_function()
+        return Matroid(groundset=self.groundset(), rank_function=rf)
