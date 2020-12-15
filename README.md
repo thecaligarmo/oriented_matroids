@@ -2,6 +2,10 @@
 
 This package contains an oriented matroid implementation for sagemath.
 
+## Current version
+
+The current version is 0.0.2 and is compatible with sagemath 9.2.
+
 ## Installation
 
 ### Local install from source
