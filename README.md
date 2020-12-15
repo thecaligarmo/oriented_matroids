@@ -25,4 +25,4 @@ Note that you might need to alter the make file in order for this to run properl
 
 ### Common errors
 
-If you get "SSL" errors, try the fixes found on: [https://ask.sagemath.org/question/51130/ssl-error-using-sage-pip-install-to-download-a-package/](ask sagemath)
+If you get "SSL" errors, try the fixes found on: [ask sagemath](https://ask.sagemath.org/question/51130/ssl-error-using-sage-pip-install-to-download-a-package/)
