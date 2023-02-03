@@ -4,6 +4,8 @@ This package contains an oriented matroid implementation for sagemath.
 
 ## Current version
 
+**NOTE:** This package currently does not work. If you would like to help with the development, please let Aram know.
+
 The current version is 0.0.2 and is compatible with sagemath 9.2.
 
 ## Installation
