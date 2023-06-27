@@ -33,7 +33,7 @@ setup(
     long_description_content_type="text/markdown",
     url='https://github.com/thecaligarmo/oriented_matroids',
     author='Aram Dermenjian',
-    author_email='aram.dermenjian@gmail.com',  # choose a main contact email
+    author_email='aram.dermenjian.math@gmail.com',  # choose a main contact email
     license='GPLv3+',  # This should be consistent with the LICENCE file
     classifiers=[
         # How mature is this project? Common values are

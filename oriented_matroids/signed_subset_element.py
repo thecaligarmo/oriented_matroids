@@ -568,4 +568,3 @@ ndset::
         Return whether or not element is 0
         """
         return len([1 for e in self.groundset() if self(e) != 0]) == 0
-

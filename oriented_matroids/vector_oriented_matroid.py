@@ -236,4 +236,3 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         vecs = [v for v in self.vectors() if not v.is_zero()]
         P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
         return P.minimal_elements()
-

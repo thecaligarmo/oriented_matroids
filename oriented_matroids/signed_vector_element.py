@@ -74,7 +74,7 @@ class SignedVectorElement(SignedSubsetElement):
         - :class:`oriented_matroids.signed_subset_element.SignedSubsetElement`
     """
 
-    def __init__(self, parent=None, data=None, groundset=None, \
+    def __init__(self, parent=None, data=None, groundset=None,
                  positives=None, negatives=None, zeroes=None):
         """
         Initialize ``self``.
