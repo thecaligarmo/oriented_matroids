@@ -36,7 +36,7 @@ class OrientedMatroids(Category):
        and
        `Z^- \subseteq \left(X^- \cup Y^-\right) \backslash \left\{e\right\}`.
 
-    See :Wikipedia:`Oriented_matroid` for details.
+    See :wikipedia:`Oriented_matroid` for details.
 
 
     EXAMPLES::
