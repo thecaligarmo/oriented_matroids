@@ -2,6 +2,15 @@
 
 All notable changes will be made in this file.
 
+## [0.1.0] -
+
+### Added
+
+### Changed
+
+### Fixed
+
+
 ## [0.0.2] - 2020-12-15
 
 ### Added
