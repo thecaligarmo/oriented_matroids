@@ -1,6 +1,6 @@
 import os
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 from codecs import open  # To open the README file with proper encoding
 from setuptools.command.test import test as TestCommand  # for tests
 
@@ -37,10 +37,9 @@ setup(
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-        'Programming Language :: Python :: 3.8.5',
     ],  # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     keywords="SageMath packaging",
-    packages=['oriented_matroids'],
+    packages=find_packages(),
     cmdclass={'test': SageTest},  # adding a special setup command for tests
     setup_requires=['sage-package'],
     install_requires=['sage-package', 'sphinx'],
