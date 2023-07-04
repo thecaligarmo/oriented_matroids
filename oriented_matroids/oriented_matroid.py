@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 r"""
-!!Oriented matroids construction
+Oriented matroids construction
 
 Theory
 ======
