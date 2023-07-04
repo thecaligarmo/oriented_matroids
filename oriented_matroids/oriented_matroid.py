@@ -44,7 +44,7 @@ from oriented_matroids.oriented_matroids_category import OrientedMatroids
 import copy
 
 
-def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
+class OrientedMatroid(SageObject):
     r"""
     Construct an oriented matroid.
 
@@ -146,117 +146,403 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
     For more information see [BLSWZ1999]_ .
 
     """
+    def is_valid(self):
+          r"""
+          Return whether satisfies oriented matroid axioms.
 
-    # Instantiate oriented matroid
-    OM = None
+          Given a set of objects, this method tests against
+          a provided set of axioms for a given representation
+          to ensure that we actually do have an oriented matroid.
+          """
+          pass
+    
+    def groundset(self):
+            """
+            Return the ground set of ``self``.
 
-    # If we have a hyperplane arrangement we need to force the key to be an
-    # arrangement,
-    if isinstance(data, HyperplaneArrangementElement):
-        if key != 'covector' and key is not None:
-            raise ValueError(
-                'Hyperplane arrangements are currently only implemented using covector axioms')
-        key = 'real_hyperplane_arrangement'
-    elif isinstance(data, PointConfiguration):
-        if key != 'circuit' and key is not None:
-            raise ValueError(
-                'Point configurations are currently only implemented using circuit axioms')
-        key = 'circuit'
-        # PC circuits are given as (+, 0, -); and only half are given
-        ci = [(C[0], C[2], C[1]) for C in data.circuits()]
-        ci += [(C[2], C[0], C[1]) for C in data.circuits()]
-        data = ci
-    elif isinstance(data, DiGraph):
-        if key != 'circuit' and key is not None:
-            raise ValueError(
-                'Digraphs are currently only implemented using circuit axioms')
-        key = 'circuit'
+            EXAMPLES::
 
-        # we need to add negative edges in order to do all simple cycles
-        digraph = copy.copy(data)
-        edges = copy.copy(list(digraph.edges()))
-        groundset = []
-        if len(edges) != len(set(edges)):
-            raise ValueError('Edge labels need to be unique')
-        if None in digraph.edge_labels():
-            raise ValueError('Edge labels must be set for all edges')
+                sage: from oriented_matroids import OrientedMatroid
+                sage: A = hyperplane_arrangements.braid(2)
+                sage: M = OrientedMatroid(A); M.groundset()
+                (Hyperplane t0 - t1 + 0,)
 
-        # Add minus edges to properly get cycles
-        for e in edges:
-            digraph.add_edge(e[1], e[0], "NEG_"+str(e[2]))
-            groundset.append(str(e[2]))
-        # Each cycle defines a circuit
-        data = []
-        for c in digraph.all_cycles_iterator(simple=True):
-            p = set([])
-            n = set([])
-            for e in range(len(c) - 1):
-                e = str(digraph.edge_label(c[e], c[e+1]))
-                if e.startswith('NEG_'):
-                    n.add(e.strip('NEG_'))
-                else:
-                    p.add(e)
-            # If an edge exists in both sets, then this is a false cycle.
-            # This implies we have ee^-1 which is why it's false.
-            # So we only add the true ones.
-            if len(p.intersection(n)) == 0:
-                data.append([p, n])
-    elif isinstance(data, Matrix):
-        if key != 'chirotope' and key is not None:
-            raise ValueError(
-                'Matrices are currently only implemented using chirotope axioms')
-        key = 'chirotope'
+            """
+            return self._groundset
+        
+    def elements(self):
+            """
+            Return elements.
 
-    if key not in OrientedMatroids.keys:
-        raise ValueError("invalid type key")
+            The elements of an oriented matroid are the "defining" elements of
+            the oriented matroid. For example, covectors are the elements of
+            an oriented matroid defined using covectors.
+            """
+            return self._elements
+        
+    def circuits(self):
+            """
+            Return all circuits.
+            """
+            if "_circuits" in dir(self):
+                return self._circuits
+            raise NotImplementedError("Circuits not implemented")
+    
+    def cocircuits(self):
+            """
+            Return all cocircuits.
+            """
+            if "_cocircuits" in dir(self):
+                return self._cocircuits
+            raise NotImplementedError("Cocircuits not implemented")
 
-    # In the following cases, deep_tupler is used since we are using
-    # UniqueRepresentation Which doesn't allow us to have non-hashable things.
-    if key == "covector":
-        from oriented_matroids.covector_oriented_matroid \
-            import CovectorOrientedMatroid
-        data = deep_tupler(data)
-        if groundset is not None:
+    def vectors(self):
+            """
+            Return all vectors.
+            """
+            if "_vectors" in dir(self):
+                return self._vectors
+            raise NotImplementedError("Vectors not implemented")
+            pass
+    
+    def covectors(self):
+           """
+           Return all covectors.
+           """
+           if "_covectors" in dir(self):
+               return self._covectors
+           raise NotImplementedError("Covectors not implemented")
+           
+    def to_circuit(self):
+            """
+            Return circuit oriented matroid.
+            """
+            from oriented_matroids import OrientedMatroid
+            return OrientedMatroid(self.circuits(),
+                                   key='circuit',
+                                   groundset=self.groundset())
+    
+    def to_vector(self):
+            """
+            Return vector oriented matroid.
+            """
+            from oriented_matroids import OrientedMatroid
+            return OrientedMatroid(self.vectors(),
+                                   key='vector',
+                                   groundset=self.groundset())
+        
+    def to_covector(self):
+            """
+            Return covector oriented matroid.
+            """
+            from oriented_matroids import OrientedMatroid
+            return OrientedMatroid(self.covectors(),
+                                   key='covector',
+                                   groundset=self.groundset())
+        
+    def dual(self):
+            """
+            Return the dual oriented matroid.
+            """
+            pass
+    
+    def matroid(self):
+           r"""
+           Returns the underlying matroid.
+           """
+           pass
+       
+    def rank(self):
+            r"""
+            Return the rank.
+
+            The *rank* of an oriented matroid is the rank of its underlying
+            matroid.
+
+            EXAMPLES::
+
+                sage: from oriented_matroids import OrientedMatroid
+                sage: A = hyperplane_arrangements.braid(3)
+                sage: M = OrientedMatroid(A); M.rank()
+                2
+                sage: A = hyperplane_arrangements.braid(4)
+                sage: M = OrientedMatroid(A); M.rank()
+                3
+            """
+            return self.matroid().rank()
+        
+    def an_element(self):
+            """
+            Returns an arbitrary element.
+            """
+            from sage.misc.prandom import randint
+            els = self.elements()
+            i = randint(1, len(els))
+            return els[i-1]
+        
+    def face_poset(self, facade=False):
+            r"""
+            Returns the (big) face poset.
+
+            The *(big) face poset* is the poset on covectors such that `X \leq Y`
+            if and only if `S(X,Y) = \emptyset` and
+            `\underline{Y} \subseteq \underline{X}`.
+
+            EXAMPLES::
+
+                sage: from oriented_matroids import OrientedMatroid
+                sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+                ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+                ....: [0,0,0]]
+                sage: M = OrientedMatroid(C, key='covector')
+                sage: M.face_poset()
+                Finite meet-semilattice containing 13 elements
+            """
+            from sage.combinat.posets.lattices import MeetSemilattice
+            els = self.covectors()
+            rels = [
+                (Y, X)
+                for X in els
+                for Y in els
+                if Y.is_conformal_with(X) and Y.support().issubset(X.support())
+            ]
+            return MeetSemilattice((els, rels), cover_relations=False, facade=facade)
+        
+    def face_lattice(self, facade=False):
+            r"""
+            Returns the (big) face lattice.
+
+            The *(big) face lattice* is the (big) face poset with a top element
+            added.
+
+            EXAMPLES::
+
+                sage: from oriented_matroids import OrientedMatroid
+                sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
+                ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
+                ....: [0,0,0]]
+                sage: M = OrientedMatroid(C, key='covector')
+                sage: M.face_lattice()
+                Finite lattice containing 14 elements
+            """
+            from sage.combinat.posets.lattices import LatticePoset
+            els = self.covectors()
+            rels = [
+                (Y, X)
+                for X in els
+                for Y in els
+                if Y.is_conformal_with(X) and Y.support().issubset(X.support())
+            ]
+
+            # Add top element
+            for i in els:
+                rels.append((i, 1))
+            els.append(1)
+            return LatticePoset((els, rels), cover_relations=False, facade=facade)
+
+#             P = self.face_poset()
+#             rels = P.relations()
+#             els = [1]
+#             for i in P:
+#                 els.append(i.element)
+#                 rels.append([i.element, 1])
+#
+#             return LatticePoset((els,rels),
+#                                 cover_relations=False,
+#                                 facade=facade)
+
+    def topes(self):
+            r"""
+            Returns the topes.
+
+            A *tope* is the maximal covector in the face poset.
+            """
+            return self.face_poset(facade=True).maximal_elements()
+        
+    def tope_poset(self, base_tope, facade=False):
+            r"""
+            Returns the tope poset.
+
+            The tope poset is the poset `(\mathcal{T}, B)` where `\mathcal{T}`
+            is the set of topes and `B` is a distinguished tope called the
+            *base tope*. The order is given by inclusion of separation sets
+            from the base tope: `X \leq Y` if and only if
+            `S(B, X) \subseteq S(B, Y)`.
+            """
+            from sage.combinat.posets.posets import Poset
+            els = self.topes()
+            rels = [
+                (X, Y)
+                for X in els
+                for Y in els
+                if base_tope.separation_set(X).issubset(base_tope.separation_set(Y))
+            ]
+
+            return Poset((els, rels), cover_relations=False, facade=facade)
+        
+    def is_simplicial(self):
+            r"""
+            Returns if the oriented matroid is simplicial.
+
+            An oriented matroid is *simplicial* if every tope is simplicial.
+
+            .. SEEALSO::
+
+                :meth:`~sage.matroids.oriented_matroids.signed_subset_element.SignedSubsetElement.is_simplicial`
+            """
+            for t in self.topes():
+                if not t.is_simplicial():
+                    return False
+            return True
+        
+    def is_acyclic(self):
+            r"""
+            Return if oriented matroid is acyclic.
+
+            A covector oriented matroid is *acyclic* if there exists a positive
+            tope where a *positive tope* is defined as a tope with no
+            negative part.
+            """
+            for t in self.topes():
+                if len(t.negatives()) == 0:
+                    return True
+            return False
+        
+    def deletion(self, change_set):
+            r"""
+            Returns a covector oriented matroid of a deletion.
+
+            Let `M = (E, \mathcal{L})` be an oriented matroid over a set `E`
+            and a set of covectors `\mathcal{L}`. Given `A \subseteq E`, the
+            *deletion* is the (covector) oriented matroid
+            `M\backslash A = (E \backslash A, \mathcal{L} \backslash A)` where
+
+            .. MATH::
+
+                \mathcal{C} \backslash A = \left\{ X\mid_{E \backslash A} : X \in \mathcal{C}\right\}
+
+            EXAMPLES::
+
+                sage: from oriented_matroids import OrientedMatroid
+
+            """
+            if change_set in self.groundset():
+                change_set = set([change_set])
+            else:
+                change_set = set(change_set)
+
+            from oriented_matroids.oriented_matroid import deep_tupler
+            groundset = set(self.groundset()).difference(change_set)
             groundset = deep_tupler(groundset)
-        OM = CovectorOrientedMatroid(data, groundset=groundset)
-    elif key == "circuit":
-        from oriented_matroids.circuit_oriented_matroid \
-            import CircuitOrientedMatroid
-        data = deep_tupler(data)
-        if groundset is not None:
+            data = []
+            for c in self.covectors():
+                p = tuple(c.positives().difference(change_set))
+                n = tuple(c.negatives().difference(change_set))
+                z = tuple(c.zeroes().difference(change_set))
+                data.append((p, n, z))
+            data = deep_tupler(data)
+
+            from oriented_matroids import OrientedMatroid
+            return OrientedMatroid(data, key='covector', groundset=groundset)
+        
+    def restriction(self, change_set):
+            r"""
+            Returns a covector oriented matroid of a restriction.
+
+            Given an oriented matroid `M = (E, \mathcal{L})` where `E` is a
+            set and `\mathcal{L}` is the set of covectors. Given
+            `A \subseteq E`, the *restriction* is the (covector) oriented
+            matroid `M / A = (E \backslash A, \mathcal{C} / A)` where
+
+            .. MATH::
+
+                \mathcal{C} / A = \left\{ X\mid_{E \backslash A} : X \in \mathcal{C} \text{ and} A \subseteq X^0 \right\}
+
+            """
+            # sage: from oriented_matroids import OrientedMatroid
+            # sage: A = hyperplane_arrangements.braid(3)
+            # sage: M = OrientedMatroid(A); M
+            # Covector Oriented Matroid of rank 3
+            # sage: R = M.restriction(M.groundset()[1]); R
+            # Covector Oriented Matroid of rank 2
+            # sage: R.elements()
+            # [(0,0), (1,1), (-1,-1)]
+            if change_set in self.groundset():
+                change_set = set([change_set])
+            else:
+                change_set = set(change_set)
+
+            from oriented_matroids.oriented_matroid import deep_tupler
+            groundset = set(self.groundset()).difference(change_set)
             groundset = deep_tupler(groundset)
-        OM = CircuitOrientedMatroid(data, groundset=groundset)
-    elif key == "vector":
-        from oriented_matroids.vector_oriented_matroid \
-            import VectorOrientedMatroid
-        data = deep_tupler(data)
-        if groundset is not None:
-            groundset = deep_tupler(groundset)
-        OM = VectorOrientedMatroid(data, groundset=groundset)
-    elif key == "real_hyperplane_arrangement":
-        from oriented_matroids.real_hyperplane_arrangement_oriented_matroid \
-            import RealHyperplaneArrangementOrientedMatroid
-        A = copy.copy(data)
-        if groundset is None:
-            groundset = deep_tupler(A.hyperplanes())
-        else:
-            groundset = deep_tupler(groundset)
-        OM = RealHyperplaneArrangementOrientedMatroid(A, groundset=groundset)
+            data = []
+            for c in self.covectors():
+                p = tuple(c.positives().difference(change_set))
+                n = tuple(c.negatives().difference(change_set))
+                z = tuple(c.zeroes().difference(change_set))
+                if change_set.issubset(c.zeroes()):
+                    data.append((p, n, z))
+            data = deep_tupler(data)
 
-    if OM is None:
-        raise NotImplementedError(
-            "Oriented matroid of type {} is not implemented".format(key))
+            from oriented_matroids import OrientedMatroid
+            return OrientedMatroid(data, key='covector', groundset=groundset)
+        
+    def loops(self):
+            r"""
+            Returns the loops of an oriented matroid.
 
-    if OM.is_valid():
-        return OM
+            A *loop* is an element `e \in E` such that there is a
+            tope `T \in \mathcal{T}` with `T(e) = 0`. In particular
+            if `T(e) = 0` for some `T`, then it is true for all
+            `T \in \mathcal{T}`.
+            """
+            T = self.topes()[0]
+            loops = []
+            gs = self.groundset()
+            for i, j in enumerate(T):
+                if T(j) == 0:
+                    loops.append(gs[i])
+            return loops
+        
+    def are_parallel(self, e, f):
+            r"""
+            Returns whether two elements in ground set are parallel.
 
-    raise ValueError("Oriented matroid is not valid")
+            Two elements in the ground set `e, f \in E` are parallel if they
+            are not loops and for all `X \in \mathcal{C}`, `X(e) = 0`
+            implies `X(f) = 0`. See Lemma 4.1.10 [BLSWZ1999]_ .
+            """
+            gs = set(self.groundset()).difference(set(self.loops()))
+            if e not in gs or f not in gs:
+                raise ValueError(
+                    "Elements must be in groundset and must not be loops")
+            for i in self.elements():
+                if i(e) == 0 and i(f) != 0:
+                    return False
+            return True
+        
+    def is_simple(self):
+            r"""
+            Returns if the oriented matroid is simple.
 
-
-def deep_tupler(obj):
-    r"""
-    changes a (nested) list or set into a (nested) tuple to be hashable
-    """
-    if isinstance(obj, list) or isinstance(obj, set):
-        return tuple([deep_tupler(i) for i in obj])
-    return obj
+            An oriented matroid is *simple* if there are no loops
+            and no parallel elements.
+            """
+            from sage.combinat.subset import Subsets
+            if len(self.loops()) > 0:
+                return False
+            for i in Subsets(self.groundset(), 2):
+                if self.are_parallel(i[0], i[1]):
+                    return False
+            return True
+        
+    def _element_constructor_(self, x):
+            r"""
+            Determine if ``x`` may be viewed as belonging to ``self``.
+            """
+            try:
+                if x in self.elements():
+                    return x
+                return False
+            except ValueError:
+                return False
