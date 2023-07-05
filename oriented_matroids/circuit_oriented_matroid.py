@@ -78,12 +78,10 @@ class CircuitOrientedMatroid(OrientedMatroid):
         Normalize arguments and set class.
         """
 
-        category = OrientedMatroids()
         return super(CircuitOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
-                           groundset=groundset,
-                           category=category)
+                           groundset=groundset)
 
     def __init__(self, data, groundset=None, category=None):
         """
