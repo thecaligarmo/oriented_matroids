@@ -21,7 +21,6 @@ AUTHORS:
 
 
 from sage.structure.parent import Parent
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_subset_element import SignedSubsetElement
 from oriented_matroids.oriented_matroid import OrientedMatroid
 
