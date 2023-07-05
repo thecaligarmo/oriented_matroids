@@ -23,9 +23,10 @@ from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_subset_element import SignedSubsetElement
+from oriented_matroids.oriented_matroid import OrientedMatroid
 
 
-class CircuitOrientedMatroid(UniqueRepresentation, Parent):
+class CircuitOrientedMatroid(OrientedMatroid):
     r"""
     An oriented matroid implemented using circuit axioms.
 
