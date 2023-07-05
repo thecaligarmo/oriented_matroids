@@ -42,6 +42,7 @@ from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 import copy
+from sage.structure.sage_object import SageObject
 
 
 class OrientedMatroid(SageObject):
