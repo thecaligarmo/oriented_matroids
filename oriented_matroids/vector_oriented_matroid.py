@@ -19,13 +19,13 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
+from oriented_matroids.oriented_matriod import OrientedMatroid
 from sage.structure.parent import Parent
 from oriented_matroids import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
-class VectorOrientedMatroid(UniqueRepresentation, Parent):
+class VectorOrientedMatroid(OrientedMatroid):
     r"""
     An oriented matroid implemented using vector axioms.
 
