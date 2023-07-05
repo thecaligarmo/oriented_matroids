@@ -19,7 +19,7 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
+
 from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_subset_element import SignedSubsetElement
