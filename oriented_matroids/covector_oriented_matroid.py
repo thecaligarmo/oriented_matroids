@@ -92,11 +92,11 @@ class CovectorOrientedMatroid(OrientedMatroid):
         return super(CovectorOrientedMatroid, cls) \
             .__classcall__(cls, data, groundset=groundset)
 
-    def __init__(self, data, groundset=None, category=None):
+    def __init__(self, data, groundset=None):
         """
         Initialize ``self``
         """
-        Parent.__init__(self, category=category)
+        Parent.__init__(self)
 
         # Set up our covectors
         covectors = []
