@@ -169,7 +169,7 @@ class OrientedMatroid(SageObject):
         (Hyperplane t0 - t1 + 0,)
 
         """
-        return self._groundset
+        return self.groundset
         
     def elements(self):
         """
