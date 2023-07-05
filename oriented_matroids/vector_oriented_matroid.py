@@ -81,9 +81,8 @@ class VectorOrientedMatroid(OrientedMatroid):
         """
         Normalize arguments and set class.
         """
-        category = OrientedMatroids()
         return super(VectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset, category=category)
+            .__classcall__(cls, data, groundset=groundset)
 
     def __init__(self, data, groundset=None, category=None):
         """
