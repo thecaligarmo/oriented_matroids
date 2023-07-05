@@ -84,14 +84,13 @@ class CovectorOrientedMatroid(OrientedMatroid):
     Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None, category=None):
+    def __classcall__(cls, data, groundset=None):
         """
         Normalize arguments and set class.
         """
-        if category is None:
-            category = OrientedMatroids()
+        
         return super(CovectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset, category=category)
+            .__classcall__(cls, data, groundset=groundset)
 
     def __init__(self, data, groundset=None, category=None):
         """
