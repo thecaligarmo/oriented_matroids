@@ -82,11 +82,10 @@ class CircuitOrientedMatroid(OrientedMatroid):
                            data=data,
                            groundset=groundset)
 
-    def __init__(self, data, groundset=None, category=None):
+    def __init__(self, data, groundset=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self, category=category)
 
         # Set up our circuits
         circuits = []
