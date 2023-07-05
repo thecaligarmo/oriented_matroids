@@ -23,11 +23,12 @@ from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
 from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
+from oriented_matroids.oriented_matroid import OrientedMatroid
 
 import copy
 
 
-class CovectorOrientedMatroid(UniqueRepresentation, Parent):
+class CovectorOrientedMatroid(OrientedMatroid):
     r"""
     An oriented matroid implemented using covector axioms.
 
