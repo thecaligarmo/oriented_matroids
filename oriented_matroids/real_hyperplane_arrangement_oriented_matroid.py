@@ -95,9 +95,6 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         self._covectors = [self.element_class(
             self, data=f, groundset=self._groundset) for f in faces]
         self._elements = self._covectors
-        
-    def groundset(self):
-        return self._groundset
 
     def _repr_(self):
         """
