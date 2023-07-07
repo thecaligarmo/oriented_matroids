@@ -169,7 +169,7 @@ class OrientedMatroid(SageObject):
         (Hyperplane t0 - t1 + 0,)
 
         """
-        return self._groundset
+        raise NotImplementedError("subclasses need to implement this.")
         
     def elements(self):
         """
