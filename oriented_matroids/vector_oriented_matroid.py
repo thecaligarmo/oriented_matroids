@@ -21,7 +21,6 @@ AUTHORS:
 
 from oriented_matroids.oriented_matriod import OrientedMatroid
 from sage.structure.parent import Parent
-from oriented_matroids import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
