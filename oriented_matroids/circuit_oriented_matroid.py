@@ -111,15 +111,6 @@ class CircuitOrientedMatroid(OrientedMatroid):
             self._groundset = None
         else:
             self._groundset = tuple(groundset)
-            
-    def groundset(self):
-        """
-        Return the ground set of ``self``.
-
-        EXAMPLES::
-
-        """
-        return self._groundset
 
     def is_valid(self):
         """
