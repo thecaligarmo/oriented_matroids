@@ -40,7 +40,6 @@ from sage.geometry.triangulation.point_configuration \
     import PointConfiguration
 from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
 import copy
 
 
