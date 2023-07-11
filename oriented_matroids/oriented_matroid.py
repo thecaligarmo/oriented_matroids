@@ -163,10 +163,10 @@ class OrientedMatroid(SageObject):
 
         EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
-        sage: A = hyperplane_arrangements.braid(2)
-        sage: M = OrientedMatroid(A); M.groundset()
-        (Hyperplane t0 - t1 + 0,)
+            sage: from oriented_matroids import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(2)
+            sage: M = OrientedMatroid(A); M.groundset()
+            (Hyperplane t0 - t1 + 0,)
 
         """
         return self._groundset
@@ -262,13 +262,13 @@ class OrientedMatroid(SageObject):
 
         EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
-        sage: A = hyperplane_arrangements.braid(3)
-        sage: M = OrientedMatroid(A); M.rank()
-        2
-        sage: A = hyperplane_arrangements.braid(4)
-        sage: M = OrientedMatroid(A); M.rank()
-        3
+            sage: from oriented_matroids import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(3)
+            sage: M = OrientedMatroid(A); M.rank()
+            2
+            sage: A = hyperplane_arrangements.braid(4)
+            sage: M = OrientedMatroid(A); M.rank()
+            3
         """
         return self.matroid().rank()
 
