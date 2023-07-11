@@ -19,8 +19,6 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-
-
 from oriented_matroids.signed_subset_element import SignedSubsetElement
 from oriented_matroids.oriented_matroid import OrientedMatroid
 
