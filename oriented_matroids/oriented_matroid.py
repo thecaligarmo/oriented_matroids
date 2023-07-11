@@ -280,7 +280,7 @@ class OrientedMatroid(SageObject):
         els = self.elements()
         i = randint(1, len(els))
         return els[i-1]
-        
+
     def face_poset(self, facade=False):
         r"""
         Returns the (big) face poset.
@@ -308,7 +308,7 @@ class OrientedMatroid(SageObject):
             if Y.is_conformal_with(X) and Y.support().issubset(X.support())
             ]
         return MeetSemilattice((els, rels), cover_relations=False, facade=facade)
-        
+
     def face_lattice(self, facade=False):
         r"""
         Returns the (big) face lattice.
@@ -359,7 +359,7 @@ class OrientedMatroid(SageObject):
         A *tope* is the maximal covector in the face poset.
         """
         return self.face_poset(facade=True).maximal_elements()
-        
+
     def tope_poset(self, base_tope, facade=False):
         r"""
         Returns the tope poset.
@@ -380,7 +380,7 @@ class OrientedMatroid(SageObject):
             ]
 
         return Poset((els, rels), cover_relations=False, facade=facade)
-        
+
     def is_simplicial(self):
         r"""
         Returns if the oriented matroid is simplicial.
@@ -395,7 +395,7 @@ class OrientedMatroid(SageObject):
             if not t.is_simplicial():
                 return False
         return True
-        
+
     def is_acyclic(self):
         r"""
         Return if oriented matroid is acyclic.
@@ -408,7 +408,7 @@ class OrientedMatroid(SageObject):
             if len(t.negatives()) == 0:
                 return True
         return False
-        
+
     def deletion(self, change_set):
         r"""
         Returns a covector oriented matroid of a deletion.
@@ -445,7 +445,7 @@ class OrientedMatroid(SageObject):
 
         from oriented_matroids import OrientedMatroid
         return OrientedMatroid(data, key='covector', groundset=groundset)
-        
+
     def restriction(self, change_set):
         r"""
         Returns a covector oriented matroid of a restriction.
@@ -487,7 +487,7 @@ class OrientedMatroid(SageObject):
 
         from oriented_matroids import OrientedMatroid
         return OrientedMatroid(data, key='covector', groundset=groundset)
-        
+
     def loops(self):
         r"""
         Returns the loops of an oriented matroid.
@@ -504,7 +504,7 @@ class OrientedMatroid(SageObject):
             if T(j) == 0:
                 loops.append(gs[i])
         return loops
-        
+
     def are_parallel(self, e, f):
         r"""
         Returns whether two elements in ground set are parallel.
@@ -521,7 +521,7 @@ class OrientedMatroid(SageObject):
             if i(e) == 0 and i(f) != 0:
                 return False
         return True
-        
+
     def is_simple(self):
         r"""
         Returns if the oriented matroid is simple.
@@ -536,7 +536,7 @@ class OrientedMatroid(SageObject):
             if self.are_parallel(i[0], i[1]):
                 return False
         return True
-        
+
     def _element_constructor_(self, x):
         r"""
         Determine if ``x`` may be viewed as belonging to ``self``.
