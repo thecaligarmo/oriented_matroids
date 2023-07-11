@@ -87,7 +87,7 @@ class CovectorOrientedMatroid(OrientedMatroid):
         """
         Normalize arguments and set class.
         """
-        
+
         return super(CovectorOrientedMatroid, cls) \
             .__classcall__(cls, data, groundset=groundset)
 
