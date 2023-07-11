@@ -156,7 +156,7 @@ class OrientedMatroid(SageObject):
         to ensure that we actually do have an oriented matroid.
         """
         pass
-    
+
     def groundset(self):
         """
         Return the ground set of ``self``.
@@ -170,7 +170,7 @@ class OrientedMatroid(SageObject):
 
         """
         return self._groundset
-        
+
     def elements(self):
         """
         Return elements.
@@ -180,7 +180,7 @@ class OrientedMatroid(SageObject):
         an oriented matroid defined using covectors.
         """
         return self._elements
-        
+
     def circuits(self):
         """
         Return all circuits.
@@ -188,7 +188,7 @@ class OrientedMatroid(SageObject):
         if "_circuits" in dir(self):
             return self._circuits
         raise NotImplementedError("Circuits not implemented")
-    
+
     def cocircuits(self):
         """
         Return all cocircuits.
@@ -205,7 +205,7 @@ class OrientedMatroid(SageObject):
             return self._vectors
         raise NotImplementedError("Vectors not implemented")
         pass
-    
+
     def covectors(self):
         """
         Return all covectors.
@@ -213,7 +213,7 @@ class OrientedMatroid(SageObject):
         if "_covectors" in dir(self):
             return self._covectors
         raise NotImplementedError("Covectors not implemented")
-           
+
     def to_circuit(self):
         """
         Return circuit oriented matroid.
@@ -222,7 +222,7 @@ class OrientedMatroid(SageObject):
         return OrientedMatroid(self.circuits(),
                                    key='circuit',
                                    groundset=self.groundset())
-    
+
     def to_vector(self):
         """
         Return vector oriented matroid.
@@ -231,7 +231,7 @@ class OrientedMatroid(SageObject):
         return OrientedMatroid(self.vectors(),
                                    key='vector',
                                    groundset=self.groundset())
-        
+
     def to_covector(self):
         """
         Return covector oriented matroid.
@@ -240,19 +240,19 @@ class OrientedMatroid(SageObject):
         return OrientedMatroid(self.covectors(),
                                    key='covector',
                                    groundset=self.groundset())
-        
+
     def dual(self):
         """
         Return the dual oriented matroid.
         """
         pass
-    
+
     def matroid(self):
         r"""
         Returns the underlying matroid.
         """
         pass
-       
+
     def rank(self):
         r"""
         Return the rank.
@@ -271,7 +271,7 @@ class OrientedMatroid(SageObject):
         3
         """
         return self.matroid().rank()
-        
+
     def an_element(self):
         """
         Returns an arbitrary element.
