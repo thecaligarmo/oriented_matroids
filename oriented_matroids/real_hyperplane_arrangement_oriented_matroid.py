@@ -68,7 +68,6 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
         Normalize arguments and set class.
         """
-        
         return super(RealHyperplaneArrangementOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
