@@ -43,7 +43,7 @@ from sage.structure.element import Matrix
 import copy
 
 
-def OrientedMatroids(data=None, groundset=None, key=None, **kwds):
+def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
     r"""
     Construct an oriented matroid.
 
