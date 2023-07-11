@@ -48,7 +48,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
     Construct an oriented matroid.
 
     The implementation of the oriented matroid differentiates which
-    axiom set that will be used.
+    axiom set that will be used.#
 
     INPUT:
 
