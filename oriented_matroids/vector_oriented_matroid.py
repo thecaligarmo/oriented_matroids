@@ -19,12 +19,12 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from oriented_matroids.oriented_matriod import OrientedMatroid
+from oriented_matroids.abstract_oriented_matriod import AbstractOrientedMatroid
 from sage.structure.parent import Parent
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
-class VectorOrientedMatroid(OrientedMatroid):
+class VectorOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using vector axioms.
 
