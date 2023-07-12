@@ -20,10 +20,10 @@ AUTHORS:
 ##############################################################################
 
 from oriented_matroids.signed_subset_element import SignedSubsetElement
-from oriented_matroids.oriented_matroid import OrientedMatroid
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 
 
-class CircuitOrientedMatroid(OrientedMatroid):
+class CircuitOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using circuit axioms.
 
