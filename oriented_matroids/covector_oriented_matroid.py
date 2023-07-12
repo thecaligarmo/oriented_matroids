@@ -22,12 +22,12 @@ AUTHORS:
 
 from sage.structure.parent import Parent
 from oriented_matroids.signed_vector_element import SignedVectorElement
-from oriented_matroids.oriented_matroid import OrientedMatroid
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 
 import copy
 
 
-class CovectorOrientedMatroid(OrientedMatroid):
+class CovectorOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using covector axioms.
 
