@@ -40,6 +40,7 @@ from sage.geometry.triangulation.point_configuration \
     import PointConfiguration
 from sage.graphs.digraph import DiGraph
 from sage.structure.element import Matrix
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 import copy
 
 
@@ -206,7 +207,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
                 'Matrices are currently only implemented using chirotope axioms')
         key = 'chirotope'
 
-    if key not in OrientedMatroid.keys:
+    if key not in AbstractOrientedMatroid.keys:
         raise ValueError("invalid type key")
 
     # In the following cases, deep_tupler is used since we are using
