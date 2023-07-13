@@ -95,8 +95,6 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         """
         Initialize ``self``
         """
-        Parent.__init__(self)
-
         # Set up our covectors
         covectors = []
         for d in data:
