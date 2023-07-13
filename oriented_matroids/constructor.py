@@ -206,8 +206,8 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
                 'Matrices are currently only implemented using chirotope axioms')
         key = 'chirotope'
 
-    if key not in OrientedMatroid.keys:
-        raise ValueError("invalid type key")
+    #if key not in OrientedMatroid.keys:
+        #raise ValueError("invalid type key")
 
     # In the following cases, deep_tupler is used since we are using
     # UniqueRepresentation Which doesn't allow us to have non-hashable things.
