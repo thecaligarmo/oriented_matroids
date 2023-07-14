@@ -19,7 +19,7 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.parent import Parent
+
 from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
 
 
@@ -77,7 +77,6 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
         Initialize ``self``
         """
-        Parent.__init__(self)
 
         self._arrangement = data
 

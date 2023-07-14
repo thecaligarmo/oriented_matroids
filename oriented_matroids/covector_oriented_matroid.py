@@ -20,7 +20,6 @@ AUTHORS:
 ##############################################################################
 
 
-from sage.structure.parent import Parent
 from oriented_matroids.signed_vector_element import SignedVectorElement
 from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 
@@ -95,7 +94,6 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         """
         Initialize ``self``
         """
-        Parent.__init__(self)
 
         # Set up our covectors
         covectors = []

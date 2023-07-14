@@ -34,12 +34,6 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 # *****************************************************************************
 
-from sage.geometry.hyperplane_arrangement.arrangement \
-    import HyperplaneArrangementElement
-from sage.geometry.triangulation.point_configuration \
-    import PointConfiguration
-from sage.graphs.digraph import DiGraph
-from sage.structure.element import Matrix
 import copy
 from sage.structure.sage_object import SageObject
 
@@ -146,6 +140,11 @@ class AbstractOrientedMatroid(SageObject):
     For more information see [BLSWZ1999]_ .
 
     """
+    """
+    List of all possible keys
+    """
+    keys = ['circuit', 'covector', 'vector', 'real_hyperplane_arrangement']
+   
     def is_valid(self):
         r"""
         Return whether satisfies oriented matroid axioms.
