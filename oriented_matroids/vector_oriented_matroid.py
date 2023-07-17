@@ -20,7 +20,6 @@ AUTHORS:
 ##############################################################################
 
 from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
-from oriented_matroids.signed_vector_element import SignedVectorElement
 from sage.categories.sets_cat import Sets
 
 

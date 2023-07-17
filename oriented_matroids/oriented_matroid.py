@@ -86,6 +86,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
     EXAMPLES::
 
         sage: from oriented_matroids import OrientedMatroid
+        sage: from oriented_matroids import AbstractOrientedMatroid
 
         sage: A = hyperplane_arrangements.braid(3)
         sage: M = OrientedMatroid(A); M
@@ -94,6 +95,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
         (Hyperplane 0*t0 + t1 - t2 + 0,
          Hyperplane t0 - t1 + 0*t2 + 0,
          Hyperplane t0 + 0*t1 - t2 + 0)
+        sage: AbstractOrientedMatroid.options.display='vector'
         sage: M.elements()
         [(0,0,0),
          (0,1,1),
