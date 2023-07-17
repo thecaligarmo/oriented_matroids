@@ -19,13 +19,12 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
-from sage.structure.parent import Parent
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 from oriented_matroids.signed_subset_element import SignedSubsetElement
+from sage.categories.sets_cat import Sets
 
 
-class CircuitOrientedMatroid(UniqueRepresentation, Parent):
+class CircuitOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using circuit axioms.
 
@@ -69,15 +68,14 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
-    Element = SignedSubsetElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-
-        category = OrientedMatroids()
+        if category is None:
+            category = Sets()
         return super(CircuitOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
@@ -88,7 +86,7 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self, category=category)
+        AbstractOrientedMatroid.__init__(self, category=category)
 
         # Set up our circuits
         circuits = []
