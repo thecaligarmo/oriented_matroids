@@ -21,7 +21,7 @@ AUTHORS:
 
 from sage.structure.parent import Parent
 from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
-
+from oriented_matroids.oriented_matroids_category import OrientedMatroids
 
 class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     r"""
@@ -64,20 +64,23 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     """
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
+        if category is None:
+            category = OrientedMatroids()
         return super(RealHyperplaneArrangementOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
-                           groundset=groundset)
+                           groundset=groundset,
+                           category=category)
 
-    def __init__(self, data, groundset=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``
         """
-        Parent.__init__(self)
+        Parent.__init__(self, category=category)
 
         self._arrangement = data
 
