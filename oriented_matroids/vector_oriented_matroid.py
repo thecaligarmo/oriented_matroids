@@ -19,12 +19,13 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from oriented_matroids.abstract_oriented_matriod import AbstractOrientedMatroid
+from sage.structure.unique_representation import UniqueRepresentation
 from sage.structure.parent import Parent
+from oriented_matroids import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
 
 
-class VectorOrientedMatroid(AbstractOrientedMatroid):
+class VectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using vector axioms.
 
@@ -80,14 +81,15 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         """
         Normalize arguments and set class.
         """
+        category = OrientedMatroids()
         return super(VectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset)
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self, data, groundset=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self)
+        Parent.__init__(self, category=category)
 
         # Set up our vectors
         vectors = []

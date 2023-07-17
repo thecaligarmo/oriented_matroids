@@ -19,14 +19,15 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-
+from sage.structure.unique_representation import UniqueRepresentation
+from sage.structure.parent import Parent
+from oriented_matroids.oriented_matroids_category import OrientedMatroids
 from oriented_matroids.signed_vector_element import SignedVectorElement
-from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 
 import copy
 
 
-class CovectorOrientedMatroid(AbstractOrientedMatroid):
+class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     An oriented matroid implemented using covector axioms.
 
@@ -82,18 +83,20 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
     Element = SignedVectorElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-
+        if category is None:
+            category = OrientedMatroids()
         return super(CovectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset)
+            .__classcall__(cls, data, groundset=groundset, category=category)
 
-    def __init__(self, data, groundset=None):
+    def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``
         """
+        Parent.__init__(self, category=category)
 
         # Set up our covectors
         covectors = []
