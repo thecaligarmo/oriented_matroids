@@ -174,7 +174,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
         # we need to add negative edges in order to do all simple cycles
         digraph = copy.copy(data)
-        edges = copy.copy(list(digraph.edges()))
+        edges = copy.copy(list(digraph.edges(sort=True)))
         groundset = []
         if len(edges) != len(set(edges)):
             raise ValueError('Edge labels need to be unique')

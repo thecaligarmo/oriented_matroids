@@ -80,23 +80,16 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
         Initialize ``self``
         """
-        Parent.__init__(self, category=category)
 
         self._arrangement = data
 
         if data and groundset is None:
             groundset = tuple(data.hyperplanes())
 
-        if groundset is None:
-            self._groundset = groundset
-        else:
-            self._groundset = tuple(groundset)
-
         # Set up our covectors after our groundset is made
         faces = [i[0] for i in self._arrangement.closed_faces()]
-        self._covectors = [self.element_class(
-            self, data=f, groundset=self._groundset) for f in faces]
-        self._elements = self._covectors
+
+        CovectorOrientedMatroid.__init__(self, data=faces, groundset=groundset, category=category)
 
     def _repr_(self):
         """
