@@ -332,7 +332,6 @@ class SignedSubsetElement(Element):
         if AbstractOrientedMatroid.options.display == 'vector':
             return "(" + ','.join([str(self(e)) for e in self.groundset()]) + ")"
 
-
     def _latex_(self):
         r"""
         Return a latex representation of the signed subset.
@@ -1060,5 +1059,3 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
             return False
         except ValueError:
             return False
-
-

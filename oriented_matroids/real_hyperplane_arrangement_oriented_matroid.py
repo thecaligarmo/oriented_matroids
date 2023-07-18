@@ -21,7 +21,7 @@ AUTHORS:
 
 
 from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
+from sage.categories.sets_cat import Sets
 
 class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     r"""
@@ -69,7 +69,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         Normalize arguments and set class.
         """
         if category is None:
-            category = OrientedMatroids()
+            category = Sets()
         return super(RealHyperplaneArrangementOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
