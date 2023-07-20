@@ -92,11 +92,8 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         """
         Initialize ``self``
         """
-<<<<<<< HEAD
         AbstractOrientedMatroid.__init__(self, category=category)
 
-=======
->>>>>>> d271389a078e0b61990997f208ea4542addc2955
         # Set up our covectors
         covectors = []
         for d in data:
