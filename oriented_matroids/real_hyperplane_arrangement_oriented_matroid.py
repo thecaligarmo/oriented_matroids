@@ -39,7 +39,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
     EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
+        sage: from oriented_matroids.constructor import OrientedMatroid
         sage: A = hyperplane_arrangements.braid(3)
         sage: M = OrientedMatroid(A); M
         Hyperplane arrangement oriented matroid of rank 2
