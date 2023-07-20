@@ -61,6 +61,10 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         Circuit oriented matroid of rank 3
         sage: M.groundset()
         (1, 2, 3, 4)
+        sage: M.an_element() in M.elements()
+        True
+        sage: M.elements() == M.circuits()
+        True
 
     .. SEEALSO::
 

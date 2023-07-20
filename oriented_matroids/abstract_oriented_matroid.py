@@ -754,6 +754,17 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
     def dual(self):
         """
         Return the dual oriented matroid.
+        
+        EXAMPLES::
+            
+            sage: from oriented_matroids import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(3)
+            sage: M = OrientedMatroid(A)
+            sage: m = M.matroid()
+            sage: m.dual()
+            Dual of 'Matroid of rank 2 on 3 elements'
+            sage: m.dual() is m
+            False
         """
         pass
 
@@ -787,6 +798,14 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
     def an_element(self):
         """
         Returns an arbitrary element.
+        
+        EXAMPLES::
+            
+            sage: D = DiGraph({'v1':{'v2':1,'v3':2,'v4':3},'v2':{'v3':4,'v4':5},'v3':{'v4':6}})
+            sage: M = OrientedMatroid(D,key="circuit")
+            sage: M.an_element() in M.circuits()
+            True
+            
         """
         from sage.misc.prandom import randint
         els = self.elements()
