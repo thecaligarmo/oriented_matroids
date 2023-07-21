@@ -694,6 +694,18 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
     def circuits(self):
         """
         Return all circuits.
+        
+        EXAMPLES::
+            
+            sage: from oriented_matroids import OrientedMatriod
+            sage: M = OrientedMatroid([[1],[-1]],key='circuit')
+            sage: M.circuits()
+            [+: 0
+             -:
+             0: ,
+             +:
+             -: 0
+             0: ]
         """
         if "_circuits" in dir(self):
             return self._circuits

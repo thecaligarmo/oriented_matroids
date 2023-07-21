@@ -226,15 +226,15 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         Given a vector oriented matroid, the set of circuits is the set
         `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
         subsets.
-        
+
         EXAMPLES::
             sage: from oriented_matroids import OrientedMatroid
-            sage: OrientedMatroid([[1],[-1],[0]], key='vector')
+            sage: M = OrientedMatroid([[1],[-1],[0]], key='vector')
             sage: M.circuits()
             [+: 0
-             -: 
+             -:
              0: ,
-             +: 
+             +:
              -: 0
              0: ]
         """
