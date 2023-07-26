@@ -723,33 +723,29 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         if "_covectors" in dir(self):
             return self._covectors
         raise NotImplementedError("Covectors not implemented")
-
-    def to_circuit(self):
-        """
-        Return circuit oriented matroid.
-        """
+        
+    
+    def change_type(self, new_type=None):
+        '''
+        Returns an oriented matroid of type specified. 
+        '''
         from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.circuits(),
-                               key='circuit',
-                               groundset=self.groundset())
-
-    def to_vector(self):
-        """
-        Return vector oriented matroid.
-        """
-        from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.vectors(),
-                               key='vector',
-                               groundset=self.groundset())
-
-    def to_covector(self):
-        """
-        Return covector oriented matroid.
-        """
-        from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.covectors(),
-                               key='covector',
-                               groundset=self.groundset())
+        if new_type == None:
+            pass
+        elif new_type == 'circuit':
+            return OrientedMatroid(self.circuits(),
+                                   key='circuit',
+                                   groundset=self.groundset())
+        elif new_type == 'vector':
+            return OrientedMatroid(self.vectors(),
+                                   key='vector',
+                                   groundset=self.groundset())
+        elif new_type == 'covector':
+            return OrientedMatroid(self.covectors(),
+                                   key='covector',
+                                   groundset=self.groundset())
+        else:
+            raise NotImplementedError("Type not implemented")
 
     def dual(self):
         """
