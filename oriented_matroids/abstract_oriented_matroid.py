@@ -725,24 +725,16 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         raise NotImplementedError("Covectors not implemented")
         
     
-    def change_type(self, new_type=None):
+    def NewOrientedMatroid(self, new_type=None):
         '''
         Returns an oriented matroid of type specified. 
         '''
         from oriented_matroids import OrientedMatroid
         if new_type == None:
             pass
-        elif new_type == 'circuit':
-            return OrientedMatroid(self.circuits(),
-                                   key='circuit',
-                                   groundset=self.groundset())
-        elif new_type == 'vector':
-            return OrientedMatroid(self.vectors(),
-                                   key='vector',
-                                   groundset=self.groundset())
-        elif new_type == 'covector':
-            return OrientedMatroid(self.covectors(),
-                                   key='covector',
+        elif new_type in AbstractOrientedMatroid.keys:
+            return OrientedMatroid(getattr(self, new_type + 's'),
+                                   key=new_type,
                                    groundset=self.groundset())
         else:
             raise NotImplementedError("Type not implemented")
