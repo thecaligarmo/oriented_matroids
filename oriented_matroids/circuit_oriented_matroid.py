@@ -99,11 +99,14 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         # If our groundset is none, make sure the groundsets are the same for
         # all elements
         if groundset is None and len(circuits) > 0:
-            groundset = circuits[0].groundset()
-            for i in range(len(circuits)):
-                if groundset != circuits[i].groundset():
-                    raise NameError("Please input an appropriate groundset or add zeros")
+            if len(data[0]) < 3:
+                groundset = []
+                for X in circuits:
+                    for el in X.groundset():
+                        if el not in groundset:
+                            groundset.append(el)
             else:
+                groundset = circuits[0].groundset()
                 for X in circuits:
                     if X.groundset() != groundset:
                         raise ValueError("Groundsets must be the same")
