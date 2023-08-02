@@ -231,5 +231,5 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
             Matroid of rank 1 on 2 elements with 2 bases
 
         """
-        circOM = self.NewOrientedMatroid(new_type='circuit')
+        circOM = self.convert_to('circuit')
         return circOM.matroid()

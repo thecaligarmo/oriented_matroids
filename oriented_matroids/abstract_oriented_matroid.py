@@ -725,15 +725,26 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         raise NotImplementedError("Covectors not implemented")
         
     
-    def NewOrientedMatroid(self, new_type=None):
+    def convert_to(self, new_type=None):
         '''
         Returns an oriented matroid of type specified. 
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: M = OrientedMatroid([[1],[-1],[0]], key='vector')
+            sage: M.convert_to('circuit')
+            Circuit oriented matroid of rank 0
+            sage: M.convert_to()
+            Traceback (most recent call last):
+            ...
+            TypeError: Must be given a type to convert to
         '''
         from oriented_matroids import OrientedMatroid
         if new_type == None:
-            pass
+            raise TypeError("Must be given a type to convert to")
         elif new_type in AbstractOrientedMatroid.keys:
-            return OrientedMatroid(getattr(self, new_type + 's'),
+            return OrientedMatroid(getattr(self, new_type + 's')(),
                                    key=new_type,
                                    groundset=self.groundset())
         else:
