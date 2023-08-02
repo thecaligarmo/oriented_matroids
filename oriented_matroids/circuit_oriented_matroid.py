@@ -102,9 +102,7 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
             if len(data[0]) < 3:
                 groundset = []
                 for X in circuits:
-                    for el in X.groundset():
-                        if el not in groundset:
-                            groundset.append(el)
+                    groundset = list(set(groundset+X.groundset()))
             else:
                 groundset = circuits[0].groundset()
                 for X in circuits:
