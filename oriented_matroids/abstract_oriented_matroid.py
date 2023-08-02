@@ -737,22 +737,185 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         """
         if "_circuits" in dir(self):
             return self._circuits
+        
+        if "_vectors" in dir(self):
+            
+            """
+            Given a vector oriented matroid, the set of circuits is the set
+            `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
+            subsets.
+            """
+            
+            from sage.combinat.posets.posets import Poset
+            # remove 0
+            vecs = [v for v in self.vectors() if not v.is_zero()]
+            P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+            return P.minimal_elements()
+        
+        
+        if "_covectors" in dir(self):
+            
+            """
+            Given a covector oriented matroid, the set of circuits is the set
+            `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
+            subsets of the vectors.
+            """
+            
+            from sage.combinat.posets.posets import Poset
+            #remove 0
+            covecs = [c for c in self.covectors() if not c.is_zero()]
+            P = Poset([covecs, lambda x,y: x.is_restriction_of(y)])
+            P.minimal_elements()
+            from oriented_matroids import OrientedMatroid
+            from itertools import product
+            vecs = []
+            L1 = []  
+            L2 = []
+            for x in product([-1,0, 1], repeat = len(list(P.minimal_elements()[0]))):
+                L1.append(x)
+            for y in L1:            
+                for x in P.minimal_elements():
+                    if x.is_orthogonal(list(y)) == False:
+                        L2.append(y)
+            for i in L1:
+                if i not in L2:
+                    vecs.append(list(i))
+            Vectors = OrientedMatroid(vecs,key='vector').elements()
+            # remove 0
+            vecs1 = [v for v in Vectors if not v.is_zero()]
+            P1 = Poset([vecs1, lambda x,y: x.is_restriction_of(y)])
+            return P1.minimal_elements()
+            
+            
+        
         raise NotImplementedError("Circuits not implemented")
 
     def cocircuits(self):
         """
         Return all cocircuits.
         """
-        if "_cocircuits" in dir(self):
-            return self._cocircuits
+        if "_circuits" in dir(self):
+            
+            """
+            Given a circuit Oriented Mantorid, the cocircuits is the 
+            inclusion-minimal (nonempty) set of the vectors that are 
+            orthogonal with all the circuits.
+            """
+            
+            from sage.combinat.posets.posets import Poset
+            #remove 0
+            covecs = [c for c in self.covectors() if not c.is_zero()]
+            P = Poset([covecs, lambda x,y: x.is_restriction_of(y)])
+            return P.minimal_elements()
+        
+        
+        if "_vectors" in dir(self):
+            
+            """
+            Given a vector Oriented Matroid, the set of cocircuits is the set
+            'Min(V)' of its covectors which denotes the set of 
+            inclusion-minimal (nonempty) signed subsets of the covectors.
+            """
+            
+            
+            from sage.combinat.posets.posets import Poset
+            from oriented_matroids import OrientedMatroid
+            from itertools import product
+            # remove 0
+            vecs = [v for v in self.vectors() if not v.is_zero()]
+            P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+            covecs = []
+            L1 = []  
+            L2 = []
+            for x in product([-1,0, 1], repeat = len(list(P.minimal_elements()[0]))):
+                L1.append(x)
+            for y in L1:            
+                for x in P.minimal_elements():
+                    if x.is_orthogonal(list(y)) == False:
+                        L2.append(y)
+            for i in L1:
+                if i not in L2:
+                    covecs.append(list(i))
+            Covectors = OrientedMatroid(covecs,key='covector').elements()
+            # remove 0
+            covecs1 = [v for v in Covectors if not v.is_zero()]
+            P1 = Poset([covecs1, lambda x,y: x.is_restriction_of(y)])
+            return P1.minimal_elements()
+            
+            
+        if "_covectors" in dir(self):
+            
+            """
+            Given a covector Oriented Matroid, the set of cocircuits is the set
+            'Min(V)' which denotes the set of inclusion-minimal (nonempty)
+            signed subsets of the covectors.
+            """
+            
+            from sage.combinat.posets.posets import Poset
+            #remove 0
+            covecs = [c for c in self.covectors() if not c.is_zero()]
+            P = Poset([covecs, lambda x,y: x.is_restriction_of(y)])
+            return P.minimal_elements()
+            
+            
         raise NotImplementedError("Cocircuits not implemented")
 
     def vectors(self):
         """
         Return all vectors.
         """
+        if "_circuits" in dir(self):
+            
+            """
+            Given a circuit Oriented Matroid the set of vectors is the set
+            of all composiotions of circuits.
+            """
+            
+            from oriented_matroids import OrientedMatroid
+            from itertools import combinations
+            from functools import reduce
+            L = []
+            for i in range(2, len(self.circuits())+1):
+                L.extend(list(combinations(self.circuits(), i)))
+            vecs = []
+            for y in list(set(self.circuits() + [reduce(lambda a,b: a.composition(b), x) for x in L])) :
+                vecs.append(y.to_list())
+            
+            return OrientedMatroid(vecs + [[0]*len(vecs[0])], key='vector').elements()
+        
         if "_vectors" in dir(self):
             return self._vectors
+                
+        if "_covectors" in dir(self):
+            
+            """
+            Given a covector Oriented Matroid the set vectors is the of all
+            the vectors that are orthogonal with all the cocircuits of 
+            the Oriented Matroid.
+            """
+            
+            from sage.combinat.posets.posets import Poset
+            #remove 0
+            covecs = [c for c in self.covectors() if not c.is_zero()]
+            P = Poset([covecs, lambda x,y: x.is_restriction_of(y)])
+            P.minimal_elements()
+            from oriented_matroids import OrientedMatroid
+            from itertools import product
+            vecs = []
+            L1 = []  
+            L2 = []
+            for x in product([-1,0, 1], repeat = len(list(P.minimal_elements()[0]))):
+                L1.append(x)
+            for y in L1:            
+                for x in P.minimal_elements():
+                    if x.is_orthogonal(list(y)) == False:
+                        L2.append(y)
+            for i in L1:
+                if i not in L2:
+                    vecs.append(list(i))
+            return OrientedMatroid(vecs,key='vector').elements()
+        
+        
         raise NotImplementedError("Vectors not implemented")
         pass
 
@@ -760,9 +923,66 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         """
         Return all covectors.
         """
+        if "_circuits" in dir(self):
+            
+            """
+            Given a circuit Oriented Matroid the set of Covectors is the set 
+            of all the vectors that are orthogonal with all the circuits of
+            the Oriented Matroid.
+            """
+            
+            from oriented_matroids import OrientedMatroid
+            from itertools import product
+            covecs = []
+            L1 = []  
+            L2 = []
+            for x in product([-1,0, 1], repeat = len(self.groundset())):
+                L1.append(x)
+            for y in L1:            
+                for x in self.circuits():
+                    if x.is_orthogonal(list(y)) == False:
+                        L2.append(y)
+            for i in L1:
+                if i not in L2:
+                    covecs.append(list(i))
+            return OrientedMatroid(covecs,key='covector').elements()
+         
+        
+        
+        
+        if "_vectors" in dir(self):
+            
+           """
+           Given a vector Oriented Matroid the set of covectors is the set 
+           of all vectors that are orthogonal with all the circuits of the 
+           Oriented Matroid.
+           """
+            
+           from sage.combinat.posets.posets import Poset
+           from oriented_matroids import OrientedMatroid
+           from itertools import product
+           # remove 0
+           vecs = [v for v in self.vectors() if not v.is_zero()]
+           P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+           covecs = []
+           L1 = []  
+           L2 = []
+           for x in product([-1,0, 1], repeat = len(list(P.minimal_elements()[0]))):
+               L1.append(x)
+           for y in L1:            
+               for x in P.minimal_elements():
+                   if x.is_orthogonal(list(y)) == False:
+                       L2.append(y)
+           for i in L1:
+               if i not in L2:
+                   covecs.append(list(i))
+           return OrientedMatroid(covecs,key='covector').elements() 
+        
+        
         if "_covectors" in dir(self):
             return self._covectors
         raise NotImplementedError("Covectors not implemented")
+        
 
     def to_circuit(self):
         """

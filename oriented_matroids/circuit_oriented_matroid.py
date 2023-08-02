@@ -215,3 +215,10 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         from sage.matroids.constructor import Matroid
         circs = list(set([frozenset(X.support()) for X in self.elements()]))
         return Matroid(groundset=self.groundset(), circuits=circs)
+
+
+ 
+
+
+    
+

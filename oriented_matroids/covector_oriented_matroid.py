@@ -227,3 +227,8 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         inc = lambda a,b: a.issubset(b)
         rf = Poset((flats, inc)).rank_function()
         return Matroid(groundset=self.groundset(), rank_function=rf)
+
+
+        
+
+        

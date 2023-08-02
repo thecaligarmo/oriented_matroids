@@ -219,6 +219,8 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         circOM = self.to_circuit()
         return circOM.matroid()
 
+     
+    
     def circuits(self):
         """
         Return the circuits.
@@ -233,3 +235,4 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         vecs = [v for v in self.vectors() if not v.is_zero()]
         P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
         return P.minimal_elements()
+    
