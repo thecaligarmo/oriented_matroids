@@ -595,7 +595,47 @@ class SignedSubsetElement(Element):
         Return whether or not element is 0
         """
         return len([1 for e in self.groundset() if self(e) != 0]) == 0
+    
+    
 
+    def is_disjoint(self, other):
+        """
+        Given a SignedSubsetElememnt and a Signed Vector, 
+        return True if the vector associated to the Signed Subset 
+        and the other vector are disjoint
+        I.e. don t have any non-zero entries on the same positions.
+        """
+        
+        y = self.to_list()
+        for x in range(len(y)):
+            if y[x] != 0 and other[x] != 0:
+                return False
+        return True
+    
+    
+    def is_orthogonal(self,other):
+        """
+        Given a SignedSubsetElememnt and a Signed Vector,
+        return true if the  vector associated to the Signed Subset 
+        and the other vector are Orthogonal.
+        """
+        
+        
+        from itertools import combinations 
+        if self.is_disjoint(other): 
+            return True
+        else:
+            y = self.to_list()
+            L=[]
+            for i in range(len(y)):
+                if y[i] != 0 and other[i] != 0:
+                    L = L + [(y[i],other[i])]
+            M = list (combinations (L,2))
+            for k in M:
+                if k[0][0] * k[0][1] == -k[1][0] * k[1][1]:
+                    return True
+            return False
+    
 class AbstractOrientedMatroid(UniqueRepresentation, Parent):
     r"""
     The category of oriented matroids.
@@ -1049,13 +1089,4 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
                 return False
         return True
 
-    def _element_constructor_(self, x):
-        r"""
-        Determine if ``x`` may be viewed as belonging to ``self``.
-        """
-        try:
-            if x in self.elements():
-                return x
-            return False
-        except ValueError:
-            return False
+    
