@@ -6,7 +6,7 @@ Category of Oriented Matroids
 #  Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
-#                  http://www.gnu.org/licenses/
+#                  https://www.gnu.org/licenses/
 # ******************************************************************************
 
 from sage.misc.abstract_method import abstract_method
@@ -36,7 +36,7 @@ class OrientedMatroids(Category):
        and
        `Z^- \subseteq \left(X^- \cup Y^-\right) \backslash \left\{e\right\}`.
 
-    See :Wikipedia:`Oriented_matroid` for details.
+    See :wikipedia:`Oriented_matroid` for details.
 
 
     EXAMPLES::
@@ -209,7 +209,7 @@ class OrientedMatroids(Category):
             from sage.misc.prandom import randint
             els = self.elements()
             i = randint(1, len(els))
-            return els[i-1]
+            return els[i - 1]
 
         def face_poset(self, facade=False):
             r"""

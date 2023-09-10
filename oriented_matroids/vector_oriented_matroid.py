@@ -217,7 +217,6 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
             sage: M = OrientedMatroid(V, key='vector')
             sage: M.matroid()
             Matroid of rank 1 on 2 elements with 2 bases
-
         """
         circOM = self.to_circuit()
         return circOM.matroid()
@@ -231,9 +230,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         subsets.
         """
         from sage.combinat.posets.posets import Poset
-        from oriented_matroids import OrientedMatroid
         # remove 0
         vecs = [v for v in self.vectors() if not v.is_zero()]
-        P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+        P = Poset([vecs, lambda x, y: x.is_restriction_of(y)])
         return P.minimal_elements()
-
