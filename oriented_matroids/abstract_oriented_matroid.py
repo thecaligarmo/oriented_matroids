@@ -744,11 +744,15 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         if new_type == None:
             raise TypeError("Must be given a type to convert to")
         elif new_type in AbstractOrientedMatroid.keys:
-            return OrientedMatroid(getattr(self, new_type + 's')(),
+            try:
+                els = getattr(self, new_type + 's')()
+            except:
+                raise NotImplementedError("No %ss() method found in oriented matroid" % (new_type,))
+            return OrientedMatroid(els,
                                    key=new_type,
                                    groundset=self.groundset())
         else:
-            raise NotImplementedError("Type not implemented")
+            raise NotImplementedError("Type %s not implemented" % (new_type,))
 
     def dual(self):
         """
