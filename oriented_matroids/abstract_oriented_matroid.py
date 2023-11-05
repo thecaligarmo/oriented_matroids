@@ -735,33 +735,36 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         if "_covectors" in dir(self):
             return self._covectors
         raise NotImplementedError("Covectors not implemented")
+        
+    
+    def convert_to(self, new_type=None):
+        '''
+        Returns an oriented matroid of type specified. 
 
-    def to_circuit(self):
-        """
-        Return circuit oriented matroid.
-        """
-        from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.circuits(),
-                               key='circuit',
-                               groundset=self.groundset())
+        EXAMPLES::
 
-    def to_vector(self):
-        """
-        Return vector oriented matroid.
-        """
+            sage: from oriented_matroids import OrientedMatroid
+            sage: M = OrientedMatroid([[1],[-1],[0]], key='vector')
+            sage: M.convert_to('circuit')
+            Circuit oriented matroid of rank 0
+            sage: M.convert_to()
+            Traceback (most recent call last):
+            ...
+            TypeError: Must be given a type to convert to
+        '''
         from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.vectors(),
-                               key='vector',
-                               groundset=self.groundset())
-
-    def to_covector(self):
-        """
-        Return covector oriented matroid.
-        """
-        from oriented_matroids import OrientedMatroid
-        return OrientedMatroid(self.covectors(),
-                               key='covector',
-                               groundset=self.groundset())
+        if new_type == None:
+            raise TypeError("Must be given a type to convert to")
+        elif new_type in AbstractOrientedMatroid.keys:
+            try:
+                els = getattr(self, new_type + 's')()
+            except:
+                raise NotImplementedError("No %ss() method found in oriented matroid" % (new_type,))
+            return OrientedMatroid(els,
+                                   key=new_type,
+                                   groundset=self.groundset())
+        else:
+            raise NotImplementedError("Type %s not implemented" % (new_type,))
 
     def dual(self):
         """

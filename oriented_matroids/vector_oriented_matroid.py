@@ -198,6 +198,21 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
             rep = "Vector oriented matroid"
         return rep
 
+    def circuits(self):
+        """
+        Return the circuits.
+
+        Given a vector oriented matroid, the set of circuits is the set
+        `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
+        subsets.
+        """
+        from sage.combinat.posets.posets import Poset
+        from oriented_matroids import OrientedMatroid
+        # remove 0
+        vecs = [v for v in self.vectors() if not v.is_zero()]
+        P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
+        return P.minimal_elements()
+
     def matroid(self):
         r"""
         Returns the underlying matroid.
