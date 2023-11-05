@@ -103,10 +103,15 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         # If our groundset is none, make sure the groundsets are the same for
         # all elements
         if groundset is None and len(circuits) > 0:
-            groundset = circuits[0].groundset()
-            for X in circuits:
-                if X.groundset() != groundset:
-                    raise ValueError("Groundsets must be the same")
+            if len(data[0]) < 3:
+                groundset = []
+                for X in circuits:
+                    groundset = list(set(groundset+X.groundset()))
+            else:
+                groundset = circuits[0].groundset()
+                for X in circuits:
+                    if X.groundset() != groundset:
+                        raise ValueError("Groundsets must be the same")
 
         self._circuits = circuits
         self._elements = circuits
@@ -144,6 +149,12 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
+            
+            sage: C5 = [((1,),(3,),(2,)), ((1,2),(3,),(4,)), ((3,),(1,),(2,)), ((3,),(1,2),(4,))]
+            sage: OrientedMatroid(C5,key='circuit')
+            Traceback (most recent call last):
+            ...
+            ValueError: Groundsets must be the same
 
         """
         circuits = self.circuits()
