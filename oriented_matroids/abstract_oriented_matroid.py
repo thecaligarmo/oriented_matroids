@@ -167,9 +167,9 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         if new_type is None:
             raise TypeError("Must be given a type to convert to")
         elif new_type in AbstractOrientedMatroid.keys:
-            try:
+            if hasattr(self, new_type + 's'):
                 els = getattr(self, new_type + 's')()
-            except:
+            else:
                 raise NotImplementedError("No %ss() method found in oriented matroid" % (new_type,))
             return OrientedMatroid(els,
                                    key=new_type,
