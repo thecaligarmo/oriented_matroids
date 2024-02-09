@@ -10,7 +10,7 @@ AUTHORS:
 """
 
 ##############################################################################
-#       Copyright (C) 2018 Aram Dermenjian <aram.dermenjian at gmail.com>
+#       Copyright (C) 2018 Aram Dermenjian <aram.dermenjian.math at gmail.com>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #
@@ -19,13 +19,11 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
-from sage.structure.parent import Parent
-from oriented_matroids import OrientedMatroids
-from oriented_matroids.signed_vector_element import SignedVectorElement
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
+from sage.categories.sets_cat import Sets
 
 
-class VectorOrientedMatroid(UniqueRepresentation, Parent):
+class VectorOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using vector axioms.
 
@@ -50,14 +48,14 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
     INPUT:
 
-    - ``data`` -- a tuple containing SigneVectorElement elements or data
-      that can be used to construct :class:`SignedVectorElement` elements
+    - ``data`` -- a tuple containing SignedSubsetElement elements or data
+      that can be used to construct :class:`SignedSubsetElement` elements
     - ``goundset`` -- (default: ``None``) is the groundset for the
       data. If not provided, we grab the data from the signed subsets.
 
     EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
+        sage: from oriented_matroids.oriented_matroid import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], key='vector'); M
         Vector oriented matroid of rank 0
         sage: M.groundset()
@@ -72,16 +70,16 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
     .. SEEALSO::
 
         - :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
-        - :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+        - :class:`oriented_matroids.abstract_oriented_matroid.AbstractOrientedMatroid`
+        - :class:`oriented_matroids.signed_subset_element.SignedSubsetElement`
     """
-    Element = SignedVectorElement
-
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-        category = OrientedMatroids()
+        if category is None:
+            category = Sets()
         return super(VectorOrientedMatroid, cls) \
             .__classcall__(cls, data, groundset=groundset, category=category)
 
@@ -89,7 +87,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self, category=category)
+        AbstractOrientedMatroid.__init__(self, category=category)
 
         # Set up our vectors
         vectors = []
@@ -116,11 +114,11 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
     def is_valid(self):
         """
-        Returns whether our circuits satisfy the circuit axioms.
+        Return whether our vectors satisfy the vector axioms.
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: V2 = [[1,1]]
             sage: OrientedMatroid(V2, key='vector')
             Traceback (most recent call last):
@@ -189,7 +187,7 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector'); M
             Vector oriented matroid of rank 1
@@ -212,28 +210,40 @@ class VectorOrientedMatroid(UniqueRepresentation, Parent):
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector')
             sage: M.matroid()
             Matroid of rank 1 on 2 elements with 2 bases
-
         """
-        circOM = self.to_circuit()
+        circOM = self.convert_to('circuit')
         return circOM.matroid()
 
     def circuits(self):
-        """
+        r"""
         Return the circuits.
 
         Given a vector oriented matroid, the set of circuits is the set
         `Min(V)` which denotes the set of inclusion-minimal (nonempty) signed
         subsets.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+            sage: M = OrientedMatroid([[1],[-1],[0]], key='vector')
+            sage: M.circuits()
+            [+: 0
+             -:
+             0: ,
+             +:
+             -: 0
+             0: ]
         """
+        if hasattr(self, "_circuits"):
+            return self._circuits
         from sage.combinat.posets.posets import Poset
-        from oriented_matroids import OrientedMatroid
         # remove 0
         vecs = [v for v in self.vectors() if not v.is_zero()]
-        P = Poset([vecs, lambda x,y: x.is_restriction_of(y)])
-        return P.minimal_elements()
-
+        P = Poset([vecs, lambda x, y: x.is_restriction_of(y)])
+        self._circuits = P.minimal_elements()
+        return self._circuits

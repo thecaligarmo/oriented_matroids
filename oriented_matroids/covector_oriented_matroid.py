@@ -10,7 +10,7 @@ AUTHORS:
 """
 
 ##############################################################################
-#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
+#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian.math at gmail.com>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #
@@ -19,15 +19,11 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
-from sage.structure.parent import Parent
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
-from oriented_matroids.signed_vector_element import SignedVectorElement
-
-import copy
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
+from sage.categories.sets_cat import Sets
 
 
-class CovectorOrientedMatroid(UniqueRepresentation, Parent):
+class CovectorOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using covector axioms.
 
@@ -48,14 +44,14 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
 
     INPUT:
 
-    - ``data`` -- a tuple containing SignedVectorElement elements or data
-      that can be used to construct :class:`SignedVectorElement` elements
+    - ``data`` -- a tuple containing SignedSubsetElement elements or data
+      that can be used to construct :class:`SignedSubsetElement` elements
     - ``goundset`` -- (default: ``None``) is the groundset for the
       data. If not provided, we grab the data from the signed subsets.
 
     EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
+        sage: from oriented_matroids.oriented_matroid import OrientedMatroid
         sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
         sage: M
         Covector oriented matroid of rank 1
@@ -77,10 +73,8 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
     .. SEEALSO::
 
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
-        :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+        :class:`oriented_matroids.abstract_oriented_matroid.AbstractOrientedMatroid`
     """
-
-    Element = SignedVectorElement
 
     @staticmethod
     def __classcall__(cls, data, groundset=None, category=None):
@@ -88,7 +82,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         Normalize arguments and set class.
         """
         if category is None:
-            category = OrientedMatroids()
+            category = Sets()
         return super(CovectorOrientedMatroid, cls) \
             .__classcall__(cls, data, groundset=groundset, category=category)
 
@@ -96,7 +90,7 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
         """
         Initialize ``self``
         """
-        Parent.__init__(self, category=category)
+        AbstractOrientedMatroid.__init__(self, category=category)
 
         # Set up our covectors
         covectors = []
@@ -160,7 +154,6 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: weak elimination failed
-
         """
         covectors = self.covectors()
 
@@ -222,12 +215,9 @@ class CovectorOrientedMatroid(UniqueRepresentation, Parent):
             sage: M = OrientedMatroid(C, key='covector')
             sage: M.matroid()
             Matroid of rank 2 on 3 elements
-
-
         """
         from sage.matroids.constructor import Matroid
         from sage.combinat.posets.posets import Poset
         flats = list(set([frozenset(X.zeroes()) for X in self.elements()]))
-        inc = lambda a,b: a.issubset(b)
-        rf = Poset((flats, inc)).rank_function()
+        rf = Poset((flats, lambda a, b: a.issubset(b))).rank_function()
         return Matroid(groundset=self.groundset(), rank_function=rf)

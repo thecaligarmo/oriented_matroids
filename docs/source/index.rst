@@ -12,7 +12,7 @@ Oriented Matroids
     :maxdepth: 1
 
     oriented_matroids/oriented_matroid
-    oriented_matroids/oriented_matroids_category
+    oriented_matroids/abstract_oriented_matroid
 
 Representations
 ---------------
@@ -22,7 +22,7 @@ Representations
 
     oriented_matroids/circuit_oriented_matroid
     oriented_matroids/covector_oriented_matroid
-    oriented_matroids/hyperplane_arrangement_oriented_matroid
+    oriented_matroids/real_hyperplane_arrangement_oriented_matroid
     oriented_matroids/vector_oriented_matroid
 
 Elements
@@ -32,7 +32,6 @@ Elements
     :maxdepth: 1
 
     oriented_matroids/signed_subset_element
-    oriented_matroids/signed_vector_element
 
 Indices and Tables
 ==================

@@ -9,7 +9,7 @@ SAGE = /sage/sage/sage
 all: install test
 
 install:
-	$(SAGE) -pip install --upgrade --no-index -v .
+	$(SAGE) -pip install --upgrade --no-index --no-build-isolation -v .
 
 uninstall:
 	$(SAGE) -pip uninstall $(PACKAGE)

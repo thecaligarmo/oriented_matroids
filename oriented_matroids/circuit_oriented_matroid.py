@@ -10,7 +10,7 @@ AUTHORS:
 """
 
 ##############################################################################
-#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
+#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian.math at gmail.com>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #
@@ -19,13 +19,11 @@ AUTHORS:
 #                  http://www.gnu.org/licenses/
 ##############################################################################
 
-from sage.structure.unique_representation import UniqueRepresentation
-from sage.structure.parent import Parent
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
-from oriented_matroids.signed_subset_element import SignedSubsetElement
+from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
+from sage.categories.sets_cat import Sets
 
 
-class CircuitOrientedMatroid(UniqueRepresentation, Parent):
+class CircuitOrientedMatroid(AbstractOrientedMatroid):
     r"""
     An oriented matroid implemented using circuit axioms.
 
@@ -63,21 +61,24 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         Circuit oriented matroid of rank 3
         sage: M.groundset()
         (1, 2, 3, 4)
+        sage: M.an_element() in M.elements()
+        True
+        sage: M.elements() == M.circuits()
+        True
 
     .. SEEALSO::
 
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
         :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
     """
-    Element = SignedSubsetElement
 
     @staticmethod
-    def __classcall__(cls, data, groundset=None):
+    def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
         """
-
-        category = OrientedMatroids()
+        if category is None:
+            category = Sets()
         return super(CircuitOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
@@ -88,7 +89,7 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         """
         Initialize ``self``.
         """
-        Parent.__init__(self, category=category)
+        AbstractOrientedMatroid.__init__(self, category=category)
 
         # Set up our circuits
         circuits = []
@@ -102,10 +103,15 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
         # If our groundset is none, make sure the groundsets are the same for
         # all elements
         if groundset is None and len(circuits) > 0:
-            groundset = circuits[0].groundset()
-            for X in circuits:
-                if X.groundset() != groundset:
-                    raise ValueError("Groundsets must be the same")
+            if len(data[0]) < 3:
+                groundset = []
+                for X in circuits:
+                    groundset = list(set(groundset+X.groundset()))
+            else:
+                groundset = circuits[0].groundset()
+                for X in circuits:
+                    if X.groundset() != groundset:
+                        raise ValueError("Groundsets must be the same")
 
         self._circuits = circuits
         self._elements = circuits
@@ -143,6 +149,12 @@ class CircuitOrientedMatroid(UniqueRepresentation, Parent):
             Traceback (most recent call last):
             ...
             ValueError: Every element needs an opposite
+
+            sage: C5 = [((1,),(3,),(2,)), ((1,2),(3,),(4,)), ((3,),(1,),(2,)), ((3,),(1,2),(4,))]
+            sage: OrientedMatroid(C5,key='circuit')
+            Traceback (most recent call last):
+            ...
+            ValueError: Groundsets must be the same
 
         """
         circuits = self.circuits()

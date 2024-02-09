@@ -10,7 +10,7 @@ AUTHORS:
 """
 
 ##############################################################################
-#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
+#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian.math at gmail.com>
 #
 #  Distributed under the terms of the GNU General Public License (GPL)
 #
@@ -18,10 +18,9 @@ AUTHORS:
 #
 #                  http://www.gnu.org/licenses/
 ##############################################################################
-
-from sage.structure.parent import Parent
 from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
-from oriented_matroids.oriented_matroids_category import OrientedMatroids
+from sage.categories.sets_cat import Sets
+
 
 class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     r"""
@@ -60,7 +59,8 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     .. SEEALSO::
 
         :class:`oriented_matroids.oriented_matroid.OrientedMatroid`
-        :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+        :class:`oriented_matroids.abstract_oriented_matroid.AbstractOrientedMatroid`
+        :class:`sage.geometry.hyperplane_arrangement.arrangement.HyperplaneArrangementElement`
     """
 
     @staticmethod
@@ -69,7 +69,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         Normalize arguments and set class.
         """
         if category is None:
-            category = OrientedMatroids()
+            category = Sets()
         return super(RealHyperplaneArrangementOrientedMatroid, cls) \
             .__classcall__(cls,
                            data=data,
@@ -80,23 +80,16 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
         Initialize ``self``
         """
-        Parent.__init__(self, category=category)
 
         self._arrangement = data
 
         if data and groundset is None:
             groundset = tuple(data.hyperplanes())
 
-        if groundset is None:
-            self._groundset = groundset
-        else:
-            self._groundset = tuple(groundset)
-
         # Set up our covectors after our groundset is made
         faces = [i[0] for i in self._arrangement.closed_faces()]
-        self._covectors = [self.element_class(
-            self, data=f, groundset=self._groundset) for f in faces]
-        self._elements = self._covectors
+
+        CovectorOrientedMatroid.__init__(self, data=faces, groundset=groundset, category=category)
 
     def _repr_(self):
         """
@@ -115,8 +108,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
 
         if not self.arrangement().is_central():
-            raise ValueError(
-                "Hyperplane arrangements must be central to be an oriented matroid.")
+            raise ValueError("Hyperplane arrangements must be central to be an oriented matroid.")
 
         return True
 
@@ -147,7 +139,6 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
             sage: G = Graph({1:[2,4],2:[3,4,5],3:[4,6,8],4:[7],5:[8]})
             sage: A = hyperplane_arrangements.graphical(G)
             sage: H = [A.hyperplanes()[i] for i in range(2,5)]
-            sage: M = OrientedMatroid(A)
             sage: M = OrientedMatroid(A); M
             Hyperplane arrangement oriented matroid of rank 7
             sage: M2 = M.deletion(H); M2

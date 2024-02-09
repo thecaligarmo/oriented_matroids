@@ -1,9 +1,9 @@
 .. nodoctest
 
-Oriented Matroids Category
+Abstract Oriented Matroids
 ==========================
 
-.. automodule:: oriented_matroids.oriented_matroids_category
+.. automodule:: oriented_matroids.abstract_oriented_matroid
     :members:
     :undoc-members:
     :show-inheritance:
