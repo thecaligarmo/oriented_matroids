@@ -15,7 +15,7 @@ The current version is 0.1.0 and is compatible/has been tested with sagemath 10.
 Use `pip` to install the package:
 
 ```
-$ sage -pip install oriented_matroids
+$ sage -pip install oriented-matroids
 ```
 
 ### Local install from source
