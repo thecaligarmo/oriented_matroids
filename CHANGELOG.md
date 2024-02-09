@@ -2,7 +2,7 @@
 
 All notable changes will be made in this file.
 
-## [0.1.0] -
+## [0.1.0] - 2024-02-09
 
 ### Added
 
