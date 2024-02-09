@@ -215,7 +215,6 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
             sage: M = OrientedMatroid(V, key='vector')
             sage: M.matroid()
             Matroid of rank 1 on 2 elements with 2 bases
-
         """
         circOM = self.convert_to('circuit')
         return circOM.matroid()
