@@ -10,7 +10,7 @@ arrangements, vector arrangements and other mathematical objects. There are
 many cryptomorphic definitions of oriented matroids. Precise definitions
 for each type can be found in that classes directory.
 
-See :Wikipedia:`Oriented_matroid` for more details.
+See :wikipedia:`Oriented_matroid` for more details.
 
 
 Built-in oriented matroids
