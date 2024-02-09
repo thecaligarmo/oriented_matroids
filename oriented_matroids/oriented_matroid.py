@@ -5,27 +5,42 @@ Oriented matroids construction
 Theory
 ======
 
-Oriented matroids are ...
+Oriented matroids are a generalization of directed graphs, central hyperplane
+arrangements, vector arrangements and other mathematical objects. There are
+many cryptomorphic definitions of oriented matroids. Precise definitions
+for each type can be found in that classes directory.
+
+See :wikipedia:`Oriented_matroid` for more details.
+
 
 Built-in oriented matroids
 ==========================
 
-...
+The current defined types of oriented matroids implemented into sage are:
+    - Circuit Oriented Matroids
+    - Covector Oriented Matroids
+    - Vector Oriented Matroids
+    - (Real) Hyperplane Arrangement Oriented Matroids
 
 Constructing oriented matroids
 ==============================
 
-To define your own oriented matroid,...
+To define your own oriented matroid, you can call the function
+`OrientedMatroids(data, key)` where `data` is the data of the oriented matroid
+and the `key` is the type of oriented matroid you are constructing. In the case
+you pass in an object for the data (such as a hyperplane arrangement, digraph,
+etc.) the code will try and create an oriented matroid for you.
 
 
 AUTHORS:
 
-- Aram Dermenjian (2019-07-12): initial version
-
+- Aram Dermenjian (2019-07-12): Initial version
+- Elizabeth Flight (2023-08-01): Beta version
+- Tudor Tanasa (2023-08-01): Beta version
 """
 
 # *****************************************************************************
-#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian at gmail.com>
+#       Copyright (C) 2019 Aram Dermenjian <aram.dermenjian.math at gmail.com>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -69,7 +84,6 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
       + A list or tuple of
 
           + :class:`SignedSubsetElement`
-          + :class:`SignedVectorElement`
           + A tuple with positive, negative, and zero sets.
 
     - ``key`` -- (default: ``None``) is the representation of the
@@ -85,8 +99,8 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
     EXAMPLES::
 
-        sage: from oriented_matroids import OrientedMatroid
-        sage: from oriented_matroids import AbstractOrientedMatroid
+        sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+        sage: from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
 
         sage: A = hyperplane_arrangements.braid(3)
         sage: M = OrientedMatroid(A); M
@@ -137,11 +151,10 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
     .. TODO::
 
         - Currently chirotopes are not implemented
-        - We need a way to go from one type to another
 
     .. SEEALSO::
 
-        :class:`oriented_matroids.oriented_matroids_category.OrientedMatroids`
+        :class:`oriented_matroids.abstract_oriented_matroid.AbstractOrientedMatroid`
 
     REFERENCES:
 
@@ -185,7 +198,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
         # Add minus edges to properly get cycles
         for e in edges:
-            digraph.add_edge(e[1], e[0], "NEG_"+str(e[2]))
+            digraph.add_edge(e[1], e[0], "NEG_" + str(e[2]))
             groundset.append(str(e[2]))
         # Each cycle defines a circuit
         data = []
@@ -193,7 +206,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
             p = set([])
             n = set([])
             for e in range(len(c) - 1):
-                e = str(digraph.edge_label(c[e], c[e+1]))
+                e = str(digraph.edge_label(c[e], c[e + 1]))
                 if e.startswith('NEG_'):
                     n.add(e.strip('NEG_'))
                 else:

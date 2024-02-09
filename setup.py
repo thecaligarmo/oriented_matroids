@@ -10,6 +10,7 @@ def readfile(filename):
     with open(filename,  encoding='utf-8') as f:
         return f.read()
 
+
 # For the tests
 class SageTest(TestCommand):
     def run_tests(self):
@@ -26,18 +27,19 @@ setup(
     long_description_content_type='text/markdown',
     url='https://github.com/thecaligarmo/oriented_matroids',
     author='Aram Dermenjian',
-    author_email='aram.dermenjian.math@gmail.com',  # choose a main contact email
+    author_email='aram.dermenjian.math@gmail.com',
     project_urls={
         'Bug Tracker': 'https://github.com/thecaligarmo/oriented_matroids/issues',
     },
     license='GPLv3+',  # This should be consistent with the LICENCE file
     python_requires='>=3.8',
+    # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 4 - Beta',
         'Intended Audience :: Science/Research',
         'Topic :: Scientific/Engineering :: Mathematics',
         'License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)',
-    ],  # classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+    ],
     keywords="SageMath packaging",
     packages=find_packages(),
     cmdclass={'test': SageTest},  # adding a special setup command for tests
