@@ -80,8 +80,8 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         """
         if category is None:
             category = Sets()
-        return super(VectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset, category=category)
+        return super().__classcall__(cls, data, groundset=groundset,
+                                     category=category)
 
     def __init__(self, data, groundset=None, category=None):
         """
@@ -112,7 +112,7 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
         else:
             self._groundset = tuple(groundset)
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Return whether our vectors satisfy the vector axioms.
 
@@ -181,7 +181,7 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
 
         return True
 
-    def _repr_(self):
+    def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
 
@@ -194,7 +194,7 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
 
         """
         try:
-            rep = "Vector oriented matroid of rank {}".format(self.rank())
+            rep = f"Vector oriented matroid of rank {self.rank()}"
         except ValueError:
             rep = "Vector oriented matroid"
         return rep

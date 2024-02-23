@@ -79,11 +79,10 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         """
         if category is None:
             category = Sets()
-        return super(CircuitOrientedMatroid, cls) \
-            .__classcall__(cls,
-                           data=data,
-                           groundset=groundset,
-                           category=category)
+        return super().__classcall__(cls,
+                                     data=data,
+                                     groundset=groundset,
+                                     category=category)
 
     def __init__(self, data, groundset=None, category=None):
         """
@@ -121,7 +120,7 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
         else:
             self._groundset = tuple(groundset)
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Return whether our circuits satisfy the circuit axioms.
 
@@ -191,7 +190,7 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
 
         return True
 
-    def _repr_(self):
+    def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
 
@@ -204,14 +203,14 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
 
         """
         try:
-            rep = "Circuit oriented matroid of rank {}".format(self.rank())
+            rep = f"Circuit oriented matroid of rank {self.rank()}"
         except ValueError:
             rep = "Circuit oriented matroid"
         return rep
 
     def matroid(self):
         r"""
-        Returns the underlying matroid.
+        Return the underlying matroid.
 
         Given an oriented matroid defined using circuits, the *underlying
         matroid* is the (circuit) matroid whose ground set is the ground set of

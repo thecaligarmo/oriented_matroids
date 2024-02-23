@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
 Abstract class for oriented matroids.
 
@@ -509,7 +508,7 @@ class SignedSubsetElement(Element):
         # ensure every elt is in the groundset
         for i in change_set:
             if i not in self.groundset():
-                raise ValueError("{} is not in the ground set".format(i))
+                raise ValueError(f"{i} is not in the ground set")
 
         p = self.positives().difference(change_set).union(
             self.negatives().intersection(change_set))

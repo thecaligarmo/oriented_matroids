@@ -1,4 +1,3 @@
-from __future__ import absolute_import
 from oriented_matroid import OrientedMatroid
 from abstract_oriented_matroid import AbstractOrientedMatroid
 
