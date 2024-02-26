@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
 Abstract class for oriented matroids.
 
@@ -69,7 +68,7 @@ class AbstractOrientedMatroid(UniqueRepresentation, Parent):
         Parent.__init__(self, category=category)
 
     @abstract_method
-    def is_valid(self):
+    def is_valid(self) -> bool:
         r"""
         Return whether satisfies oriented matroid axioms.
 

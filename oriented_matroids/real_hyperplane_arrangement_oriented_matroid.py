@@ -70,11 +70,10 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
         """
         if category is None:
             category = Sets()
-        return super(RealHyperplaneArrangementOrientedMatroid, cls) \
-            .__classcall__(cls,
-                           data=data,
-                           groundset=groundset,
-                           category=category)
+        return super().__classcall__(cls,
+                                     data=data,
+                                     groundset=groundset,
+                                     category=category)
 
     def __init__(self, data, groundset=None, category=None):
         """
@@ -91,7 +90,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
         CovectorOrientedMatroid.__init__(self, data=faces, groundset=groundset, category=category)
 
-    def _repr_(self):
+    def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
         """
@@ -102,11 +101,10 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
             rep = "Hyperplane arrangement oriented matroid"
         return rep
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
         Return whether or not the arrangement is an oriented matroid
         """
-
         if not self.arrangement().is_central():
             raise ValueError("Hyperplane arrangements must be central to be an oriented matroid.")
 

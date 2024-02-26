@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 r"""
 Oriented matroids construction
 
@@ -260,7 +259,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
     if OM is None:
         raise NotImplementedError(
-            "Oriented matroid of type {} is not implemented".format(key))
+            f"Oriented matroid of type {key} is not implemented")
 
     if OM.is_valid():
         return OM

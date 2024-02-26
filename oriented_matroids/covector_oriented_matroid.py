@@ -83,8 +83,8 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         """
         if category is None:
             category = Sets()
-        return super(CovectorOrientedMatroid, cls) \
-            .__classcall__(cls, data, groundset=groundset, category=category)
+        return super().__classcall__(cls, data, groundset=groundset,
+                                     category=category)
 
     def __init__(self, data, groundset=None, category=None):
         """
@@ -115,19 +115,19 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
         else:
             self._groundset = tuple(groundset)
 
-    def _repr_(self):
+    def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
         """
         try:
-            rep = "Covector oriented matroid of rank {}".format(self.rank())
+            rep = f"Covector oriented matroid of rank {self.rank()}"
         except ValueError:
             rep = "Covector oriented matroid"
         return rep
 
-    def is_valid(self):
+    def is_valid(self) -> bool:
         """
-        Returns whether our covectors satisfy the covector axioms.
+        Return whether our covectors satisfy the covector axioms.
 
         EXAMPLES::
 
