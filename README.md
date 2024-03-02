@@ -29,7 +29,8 @@ Change to the root directory and run:
 $ sage -pip install .
 ```
 
-For convenience this package contains a makefile with this and other often used commands. This file neds updating to your sage installation directory before running.
+For convenience this package contains a makefile with this and other often used commands.
+The make file needs updating to your sage installation directory before running.
 
 ```
 $ make install
@@ -60,6 +61,7 @@ $ make uninstall
 
 ## Documentation
 To make the documentation, you can use `make`:
+The make file needs updating to your sage installation directory before running.
 ```
 $ make doc
 ```

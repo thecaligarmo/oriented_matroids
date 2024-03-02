@@ -1,3 +1,30 @@
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "oriented_matroids"
+authors = [
+    {name = "Aram Dermenjian", email = "aram.dermenjian.math@gmail.com"},
+]
+description = "Oriented matroids for sagemath"
+keywords=["SageMath packaging"]
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+# classifiers list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
+classifiers=[
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+]
+dependencies=["sage-package", "sphinx"]
+version="0.1.1"
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://github.com/thecaligarmo/oriented_matroids"
+"Bug Tracker" = "https://github.com/thecaligarmo/oriented_matroids/issues"
