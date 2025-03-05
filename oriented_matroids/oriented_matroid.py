@@ -134,7 +134,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
         sage: M = OrientedMatroid(PC); M
         Circuit oriented matroid of rank 3
         sage: M.matroid()
-        Matroid of rank 3 on 6 elements with 16 bases
+        Matroid of rank 3 on 6 elements with 7 circuits
 
         sage: OrientedMatroid([[0]],key='covector')
         Covector oriented matroid of rank 0

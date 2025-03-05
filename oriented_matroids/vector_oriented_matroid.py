@@ -214,7 +214,7 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
             sage: V = [[1,1],[-1,-1],[0,0]]
             sage: M = OrientedMatroid(V, key='vector')
             sage: M.matroid()
-            Matroid of rank 1 on 2 elements with 2 bases
+            Matroid of rank 1 on 2 elements with 1 circuits
         """
         circOM = self.convert_to('circuit')
         return circOM.matroid()

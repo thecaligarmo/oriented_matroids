@@ -223,7 +223,7 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
             sage: C = [ ((1,),(2,)) , ((2,),(1,)) , ((3,),(4,)) , ((4,),(3,))]
             sage: M = OrientedMatroid(C,key='circuit',groundset=[1,2,3,4])
             sage: M.matroid()
-            Matroid of rank 2 on 4 elements with 4 bases
+            Matroid of rank 2 on 4 elements with 2 circuits
 
         """
         from sage.matroids.constructor import Matroid
