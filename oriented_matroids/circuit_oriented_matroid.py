@@ -16,7 +16,7 @@ AUTHORS:
 #
 #  The full text of the GPL is available at:
 #
-#                  http://www.gnu.org/licenses/
+#                  https://www.gnu.org/licenses/
 ##############################################################################
 
 from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
@@ -76,6 +76,13 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
     def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
+
+        INPUT:
+
+        - ``data`` -- a tuple containing SignedSubsetElement elements or data
+          that can be used to construct :class:`SignedSubsetElement` elements
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the signed subsets.
         """
         if category is None:
             category = Sets()
@@ -87,6 +94,22 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
     def __init__(self, data, groundset=None, category=None):
         """
         Initialize ``self``.
+
+        INPUT:
+
+        - ``data`` -- a tuple containing SignedSubsetElement elements or data
+          that can be used to construct :class:`SignedSubsetElement` elements
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the signed subsets.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids import OrientedMatroid
+            sage: M = OrientedMatroid(key='circuit'); M
+            Circuit oriented matroid of rank 0
+            sage: M = OrientedMatroid([[1], [-1]], key='circuit'); M
+            Circuit oriented matroid of rank 0
+            sage: TestSuite(M).run()
         """
         AbstractOrientedMatroid.__init__(self, category=category)
 
@@ -105,7 +128,7 @@ class CircuitOrientedMatroid(AbstractOrientedMatroid):
             if len(data[0]) < 3:
                 groundset = []
                 for X in circuits:
-                    groundset = list(set(groundset+X.groundset()))
+                    groundset = list(set(groundset + X.groundset()))
             else:
                 groundset = circuits[0].groundset()
                 for X in circuits:

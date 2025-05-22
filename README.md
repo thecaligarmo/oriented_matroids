@@ -4,7 +4,7 @@ This package contains an oriented matroid implementation for sagemath.
 
 ## Current version
 
-The current version is 0.1.1 and is compatible/has been tested with sagemath 10.0, 10.1 and 10.2. It is in beta and is open for testing from others.
+The current version is 0.1.1 and is compatible/has been tested with sagemath 10.6. It is in beta and is open for testing from others.
 
 **NOTE:** This package will be integrating into SageMath directly. If you see any errors while using this please, open an issue and let us know so we can correct it.
 

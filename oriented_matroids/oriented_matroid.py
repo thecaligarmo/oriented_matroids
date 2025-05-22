@@ -45,7 +45,7 @@ AUTHORS:
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 2 of the License, or
 # (at your option) any later version.
-#                  http://www.gnu.org/licenses/
+#                  https://www.gnu.org/licenses/
 # *****************************************************************************
 
 from sage.geometry.hyperplane_arrangement.arrangement \
@@ -188,7 +188,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
         # we need to add negative edges in order to do all simple cycles
         digraph = copy.copy(data)
-        edges = copy.copy(list(digraph.edges(sort=True)))
+        edges = list(digraph.edges(sort=True))
         groundset = []
         if len(edges) != len(set(edges)):
             raise ValueError('Edge labels need to be unique')
@@ -213,7 +213,7 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
             # If an edge exists in both sets, then this is a false cycle.
             # This implies we have ee^-1 which is why it's false.
             # So we only add the true ones.
-            if len(p.intersection(n)) == 0:
+            if not p.intersection(n):
                 data.append([p, n])
     elif isinstance(data, Matrix):
         if key != 'chirotope' and key is not None:
@@ -269,7 +269,17 @@ def OrientedMatroid(data=None, groundset=None, key=None, **kwds):
 
 def deep_tupler(obj):
     r"""
-    changes a (nested) list or set into a (nested) tuple to be hashable
+    Change a (nested) list or set into a (nested) tuple to be hashable.
+
+    INPUT:
+
+    - ``obj`` -- A (nested) list/tuple.
+
+    EXAMPLES::
+
+        sage: from oriented_matroids.oriented_matroid import deep_tupler
+        sage: deep_tupler([1,2,[3,4],[5,[6,7]],[8]])
+        (1, 2, (3, 4), (5, (6, 7)), (8,))
     """
     if isinstance(obj, list) or isinstance(obj, set):
         return tuple([deep_tupler(i) for i in obj])
