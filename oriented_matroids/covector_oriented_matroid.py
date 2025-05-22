@@ -16,7 +16,7 @@ AUTHORS:
 #
 #  The full text of the GPL is available at:
 #
-#                  http://www.gnu.org/licenses/
+#                  https://www.gnu.org/licenses/
 ##############################################################################
 
 from oriented_matroids.abstract_oriented_matroid import AbstractOrientedMatroid
@@ -80,6 +80,13 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
     def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
+
+        INPUT:
+
+        - ``data`` -- a tuple containing SignedSubsetElement elements or data
+          that can be used to construct :class:`SignedSubsetElement` elements
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the signed subsets.
         """
         if category is None:
             category = Sets()
@@ -88,7 +95,14 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
 
     def __init__(self, data, groundset=None, category=None):
         """
-        Initialize ``self``
+        Initialize ``self``.
+
+        INPUT:
+
+        - ``data`` -- a tuple containing SignedSubsetElement elements or data
+          that can be used to construct :class:`SignedSubsetElement` elements
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the signed subsets.
         """
         AbstractOrientedMatroid.__init__(self, category=category)
 
@@ -118,6 +132,13 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
     def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+            sage: M = OrientedMatroid([[1], [-1], [0]], groundset=['e'], key='covector')
+            sage: M
+            Covector oriented matroid of rank 1
         """
         try:
             rep = f"Covector oriented matroid of rank {self.rank()}"
@@ -131,7 +152,7 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: M = OrientedMatroid([[1],[-1],[0]], groundset=['e'], key='covector')
             sage: M
             Covector oriented matroid of rank 1
@@ -208,7 +229,7 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: C = [ [1,1,1], [1,1,0],[1,1,-1],[1,0,-1],[1,-1,-1],[0,-1,-1],
             ....: [-1,-1,-1],[0,1,1],[-1,1,1],[-1,0,1],[-1,-1,1],[-1,-1,0],
             ....: [0,0,0]]

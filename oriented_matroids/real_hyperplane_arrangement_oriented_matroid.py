@@ -16,7 +16,7 @@ AUTHORS:
 #
 #  The full text of the GPL is available at:
 #
-#                  http://www.gnu.org/licenses/
+#                  https://www.gnu.org/licenses/
 ##############################################################################
 from oriented_matroids.covector_oriented_matroid import CovectorOrientedMatroid
 from sage.categories.sets_cat import Sets
@@ -67,6 +67,13 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     def __classcall__(cls, data, groundset=None, category=None):
         """
         Normalize arguments and set class.
+
+        INPUT:
+
+        - ``data`` -- a :class:`HyperplaneArrangementElement` element.
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the hyperplane
+          arrangement
         """
         if category is None:
             category = Sets()
@@ -77,7 +84,22 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
     def __init__(self, data, groundset=None, category=None):
         """
-        Initialize ``self``
+        Initialize ``self``.
+
+        INPUT:
+
+        - ``data`` -- a :class:`HyperplaneArrangementElement` element.
+        - ``goundset`` -- (default: ``None``) is the groundset for the
+          data. If not provided, we grab the data from the hyperplane
+          arrangement
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(3)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 2
+            sage: TestSuite(M).run()
         """
 
         self._arrangement = data
@@ -93,6 +115,13 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
     def _repr_(self) -> str:
         """
         Return a string representation of ``self``.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(3)
+            sage: M = OrientedMatroid(A); M
+            Hyperplane arrangement oriented matroid of rank 2
         """
         try:
             rep = "Hyperplane arrangement oriented matroid of rank {}".format(
@@ -103,7 +132,21 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
     def is_valid(self) -> bool:
         """
-        Return whether or not the arrangement is an oriented matroid
+        Return whether or not the arrangement is an oriented matroid.
+
+        EXAMPLES::
+
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
+            sage: A = hyperplane_arrangements.braid(3)
+            sage: M = OrientedMatroid(A)
+            sage: M.is_valid()
+            True
+
+            sage: A = hyperplane_arrangements.Shi(2)
+            sage: M = OrientedMatroid(A)
+            Traceback (most recent call last):
+            ...
+            ValueError: Hyperplane arrangements must be central to be an oriented matroid.
         """
         if not self.arrangement().is_central():
             raise ValueError("Hyperplane arrangements must be central to be an oriented matroid.")
@@ -116,7 +159,7 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: G = Graph({1:[2,4],2:[3,4]})
             sage: A = hyperplane_arrangements.graphical(G)
             sage: M = OrientedMatroid(A); M
@@ -129,11 +172,11 @@ class RealHyperplaneArrangementOrientedMatroid(CovectorOrientedMatroid):
 
     def deletion(self, hyperplanes):
         """
-        Return the hyperplane arrangement oriented matroid with hyperplanes removed
+        Return the hyperplane arrangement oriented matroid with hyperplanes removed.
 
         EXAMPLES::
 
-            sage: from oriented_matroids import OrientedMatroid
+            sage: from oriented_matroids.oriented_matroid import OrientedMatroid
             sage: G = Graph({1:[2,4],2:[3,4,5],3:[4,6,8],4:[7],5:[8]})
             sage: A = hyperplane_arrangements.graphical(G)
             sage: H = [A.hyperplanes()[i] for i in range(2,5)]
