@@ -366,7 +366,7 @@ class SignedSubsetElement(Element):
 
     def __bool__(self):
         r"""
-        Returns whether an element is not considered a zero.
+        Return whether an element is not considered a zero.
 
         For an oriented matroid, we consider the empty set
         `\emptyset = (\emptyset,\emptyset)` to be a zero as
@@ -396,7 +396,7 @@ class SignedSubsetElement(Element):
 
     def __iter__(self):
         """
-        Returns an iter version of self.
+        Return an iter version of self.
 
         EXAMPLES::
 
