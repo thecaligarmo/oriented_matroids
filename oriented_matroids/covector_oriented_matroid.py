@@ -214,7 +214,7 @@ class CovectorOrientedMatroid(AbstractOrientedMatroid):
 
     def matroid(self):
         r"""
-        Returns the underlying matroid.
+        Return the underlying matroid.
 
         Given a covector oriented matroid, the *underlying matroid* is the
         (flat) matroid whose collection of flats is given by the set of

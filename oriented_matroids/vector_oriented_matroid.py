@@ -220,7 +220,7 @@ class VectorOrientedMatroid(AbstractOrientedMatroid):
 
     def matroid(self):
         r"""
-        Returns the underlying matroid.
+        Return the underlying matroid.
 
         Given an oriented matroid defined using vector, the *underlying
         matroid* is the (circuit) matroid whose ground set is the ground set of
