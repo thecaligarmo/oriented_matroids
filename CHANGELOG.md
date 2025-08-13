@@ -2,6 +2,14 @@
 
 All notable changes will be made in this file.
 
+## [0.2] - 2025-08-13
+
+### Fixed
+
+- (#29) Fix doctests
+- (#30) Add additional doctests and make minor updates
+- (#31) Fix docs
+
 ## [0.1.1] - 2024-03-02
 
 ### Changed
