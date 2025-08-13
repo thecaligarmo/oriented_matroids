@@ -2,6 +2,13 @@
 
 All notable changes will be made in this file.
 
+## [0.1.1] - 2024-03-02
+
+### Changed
+
+- (#27) Modernize python package data
+- (#28) Clean up syntax
+
 ## [0.1.0] - 2024-02-09
 
 ### Added
