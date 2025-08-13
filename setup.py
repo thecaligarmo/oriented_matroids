@@ -13,7 +13,7 @@ class SageTest(TestCommand):
 
 
 setup(
-    version='0.1.1',
+    version='0.2',
     packages=find_packages(),
     cmdclass={'test': SageTest},  # adding a special setup command for tests
 )

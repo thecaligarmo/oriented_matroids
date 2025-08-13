@@ -19,7 +19,7 @@ classifiers=[
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
 ]
 dependencies=["sage-package", "sphinx"]
-version="0.1.1"
+version="0.2"
 
 [project.readme]
 file = "README.md"
